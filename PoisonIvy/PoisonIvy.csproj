@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3140ACA5-A957-4EB6-92E3-AEE64EB0CAA4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PoisonIvy</RootNamespace>
+    <AssemblyName>PoisonIvy</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\modules\</OutputPath>
+    <StartAction>1</StartAction>
+    <StartProgram>$(MSBuildProjectDirectory)\bin\Debug\fireBwall.exe</StartProgram>
+    <StartWorkingDirectory>$(MSBuildProjectDirectory)\bin\Debug\</StartWorkingDirectory>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\modules\</OutputPath>
+    <StartAction>1</StartAction>
+    <StartProgram>$(MSBuildProjectDirectory)\bin\Release\fireBwall.exe</StartProgram>
+    <StartWorkingDirectory>$(MSBuildProjectDirectory)\bin\Release\</StartWorkingDirectory>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FirewallModule">
+      <HintPath>bin\Release\FirewallModule.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Poisoners\ARPPoisoner.cs" />
+    <Compile Include="PoisonerUIs\ARPUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PoisonerUIs\ARPUI.Designer.cs">
+      <DependentUpon>ARPUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Poisoners\DHCPPoisoner.cs" />
+    <Compile Include="Poisoners\DNSPoisoner.cs" />
+    <Compile Include="PoisonerUIs\DHCPUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PoisonerUIs\DHCPUI.Designer.cs">
+      <DependentUpon>DHCPUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PoisonerUIs\DNSUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PoisonerUIs\DNSUI.Designer.cs">
+      <DependentUpon>DNSUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="fireBwallModule.cs" />
+    <Compile Include="Poisoner.cs" />
+    <Compile Include="PoisonerUIs\PoisonIvyUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PoisonerUIs\PoisonIvyUI.Designer.cs">
+      <DependentUpon>PoisonIvyUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fireBwall.exe" />
+    <Content Include="FirewallModule.dll" />
+    <Content Include="ndisapi.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PoisonerUIs\ARPUI.resx">
+      <DependentUpon>ARPUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PoisonerUIs\DHCPUI.resx">
+      <DependentUpon>DHCPUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PoisonerUIs\DNSUI.resx">
+      <DependentUpon>DNSUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PoisonerUIs\PoisonIvyUI.resx">
+      <DependentUpon>PoisonIvyUI.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

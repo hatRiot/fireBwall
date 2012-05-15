@@ -1,0 +1,27 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>fireBwall 0.3.11.0 Module</Name>
+    <Description>Template for creating modules for fireBwall 0.3.11.0</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>fireBwall 0.3.11.0 Module</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="ModuleTemplate.csproj" File="ModuleTemplate.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="false" TargetFileName="fireBwall.exe">fireBwall.exe</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="fireBwallModule.cs">fireBwallModule.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="FirewallModule.dll">FirewallModule.dll</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="ndisapi.dll">ndisapi.dll</ProjectItem>
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      </Folder>
+    </Project>
+  </TemplateContent>
+</VSTemplate>
