@@ -8,6 +8,11 @@ namespace fireBwall.Configuration.Testing
 {
     class Program
     {
+        public static void Setup()
+        {
+            ConfigurationManagement.Instance.ConfigurationPath = "temp";
+        }
+
         [STAThread]
         static void Main(string[] args)
         {

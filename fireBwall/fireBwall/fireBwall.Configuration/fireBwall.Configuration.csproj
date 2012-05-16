@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,9 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorScheme.cs" />
     <Compile Include="ConfigurationManagement.cs" />
     <Compile Include="GeneralConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThemeConfiguration.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\fireBwall.Logging\fireBwall.Logging.csproj">
+      <Project>{ED3A3469-A88C-4F53-B155-2F52EE00C221}</Project>
+      <Name>fireBwall.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\fireBwall.Modules\fireBwall.Modules.csproj">
+      <Project>{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}</Project>
+      <Name>fireBwall.Modules</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

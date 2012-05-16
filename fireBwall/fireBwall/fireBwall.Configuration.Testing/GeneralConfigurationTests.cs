@@ -10,11 +10,6 @@ namespace fireBwall.Configuration.Testing
     [TestFixture]
     public class GeneralConfigurationTests
     {
-        private void Setup()
-        {
-            ConfigurationManagement.Instance.ConfigurationPath = "temp";
-        }
-
         [Test]
         public void TestEmptyLoading()
         {
@@ -24,7 +19,7 @@ namespace fireBwall.Configuration.Testing
         [Test]
         public void TestSavingAndLoading()
         {
-            Setup();
+            Program.Setup();
             Assert.IsTrue(GeneralConfiguration.Instance.Load());
             GeneralConfiguration.Instance.PreferredLanguage = "English";
             Assert.IsTrue(GeneralConfiguration.Instance.Save());

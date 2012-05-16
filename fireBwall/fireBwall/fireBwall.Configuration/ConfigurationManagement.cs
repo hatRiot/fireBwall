@@ -73,6 +73,7 @@ namespace fireBwall.Configuration
         {
             if (!GeneralConfiguration.Instance.Save())
                 return false;
+            ThemeConfiguration.Instance.Save();
             return true;
         }
 
@@ -80,6 +81,7 @@ namespace fireBwall.Configuration
         {
             if (!GeneralConfiguration.Instance.Load())
                 return false;
+            ThemeConfiguration.Instance.Load();
             return true;
         }
 

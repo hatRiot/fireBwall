@@ -3,6 +3,7 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using fireBwall.Logging;
 
 namespace fireBwall.Configuration
 {
@@ -70,15 +71,55 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                return configuration.PreferredLanguage;
+                string ret = "English";
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        ret = "" + configuration.PreferredLanguage;
+                    }
+                    catch(Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                configuration.PreferredLanguage = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        configuration.PreferredLanguage = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -86,15 +127,55 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                return configuration.CurrentTheme;
+                string ret = "Light";
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        ret = "" + configuration.CurrentTheme;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                configuration.CurrentTheme = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        configuration.CurrentTheme = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -102,15 +183,55 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                return configuration.StartMinimized;
+                bool ret = false;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        ret = configuration.StartMinimized;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                configuration.StartMinimized = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        configuration.StartMinimized = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -118,15 +239,55 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                return configuration.ShowPopups;
+                bool ret = true;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        ret = configuration.ShowPopups;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                configuration.ShowPopups = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        configuration.ShowPopups = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -134,15 +295,55 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                return configuration.MaxLogs;
+                uint ret = 25;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        ret = configuration.MaxLogs;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                configuration.MaxLogs = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        configuration.MaxLogs = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -150,15 +351,55 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                return configuration.MaxPcapLogs;
+                uint ret = 5;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        ret = configuration.MaxPcapLogs;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                configuration.MaxPcapLogs = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        configuration.MaxPcapLogs = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -166,19 +407,59 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                if (configuration.UpdateConfig == null)
-                    configuration.UpdateConfig = new UpdateConfiguration();
-                return configuration.UpdateConfig.CheckOnStartUp;
+                bool ret = true;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        if (configuration.UpdateConfig == null)
+                            configuration.UpdateConfig = new UpdateConfiguration();
+                        ret = configuration.UpdateConfig.CheckOnStartUp;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                if (configuration.UpdateConfig == null)
-                    configuration.UpdateConfig = new UpdateConfiguration();
-                configuration.UpdateConfig.CheckOnStartUp = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        if (configuration.UpdateConfig == null)
+                            configuration.UpdateConfig = new UpdateConfiguration();
+                        configuration.UpdateConfig.CheckOnStartUp = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -186,19 +467,59 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                if (configuration.UpdateConfig == null)
-                    configuration.UpdateConfig = new UpdateConfiguration();
-                return configuration.UpdateConfig.IntervaledChecks;
+                bool ret = true;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        if (configuration.UpdateConfig == null)
+                            configuration.UpdateConfig = new UpdateConfiguration();
+                        ret = configuration.UpdateConfig.IntervaledChecks;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                if (configuration.UpdateConfig == null)
-                    configuration.UpdateConfig = new UpdateConfiguration();
-                configuration.UpdateConfig.IntervaledChecks = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        if (configuration.UpdateConfig == null)
+                            configuration.UpdateConfig = new UpdateConfiguration();
+                        configuration.UpdateConfig.IntervaledChecks = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
@@ -206,19 +527,59 @@ namespace fireBwall.Configuration
         {
             get
             {
-                if (configuration == null)
-                    Load();
-                if (configuration.UpdateConfig == null)
-                    configuration.UpdateConfig = new UpdateConfiguration();
-                return configuration.UpdateConfig.IntervalMinutes;
+                uint ret = 10;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        if (configuration.UpdateConfig == null)
+                            configuration.UpdateConfig = new UpdateConfiguration();
+                        ret = configuration.UpdateConfig.IntervalMinutes;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
             set
             {
-                if (configuration == null)
-                    Load();
-                if (configuration.UpdateConfig == null)
-                    configuration.UpdateConfig = new UpdateConfiguration();
-                configuration.UpdateConfig.IntervalMinutes = value;
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        if (configuration.UpdateConfig == null)
+                            configuration.UpdateConfig = new UpdateConfiguration();
+                        configuration.UpdateConfig.IntervalMinutes = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
             }
         }
 
