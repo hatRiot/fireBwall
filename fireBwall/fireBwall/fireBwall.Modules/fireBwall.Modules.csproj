@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ColorScheme.cs" />
+    <Compile Include="Configuration\ConfigurationManagement.cs" />
+    <Compile Include="Configuration\GeneralConfiguration.cs" />
+    <Compile Include="Configuration\ThemeConfiguration.cs" />
+    <Compile Include="Logging\DebugLogMessage.cs" />
+    <Compile Include="Logging\LogCenter.cs" />
     <Compile Include="PacketMainReturn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />

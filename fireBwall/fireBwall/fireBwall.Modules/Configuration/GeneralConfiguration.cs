@@ -44,6 +44,7 @@ namespace fireBwall.Configuration
             public string PreferredLanguage = null;
             public bool StartMinimized = false;
             public bool ShowPopups = true;
+            public bool DeveloperMode = false;
             public uint MaxLogs = 5;
             public uint MaxPcapLogs = 25;
             public UpdateConfiguration UpdateConfig = new UpdateConfiguration();
@@ -162,6 +163,62 @@ namespace fireBwall.Configuration
                         if (configuration == null)
                             Load();
                         configuration.CurrentTheme = value;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+            }
+        }
+
+        public bool DeveloperMode
+        {
+            get
+            {
+                bool ret = false;
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        ret = configuration.DeveloperMode;
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
+            }
+            set
+            {
+                try
+                {
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        if (configuration == null)
+                            Load();
+                        configuration.DeveloperMode = value;
                     }
                     catch (Exception e)
                     {

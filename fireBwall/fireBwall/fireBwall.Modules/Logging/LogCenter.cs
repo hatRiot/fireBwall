@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using fireBwall.Utils;
+using fireBwall.Configuration;
 
 namespace fireBwall.Logging
 {
@@ -32,17 +33,10 @@ namespace fireBwall.Logging
 
         #endregion
 
-        #region Locks
-
-        ReaderWriterLock ExceptionLock = new ReaderWriterLock();
-        ReaderWriterLock BasicLock = new ReaderWriterLock();
-        ReaderWriterLock PcapLock = new ReaderWriterLock();
-
-        #endregion
-
         #region Variables
 
         SwapBufferQueue<Exception> ExceptionQueue = new SwapBufferQueue<Exception>();
+        SwapBufferQueue<DebugLogMessage> DebugQueue = new SwapBufferQueue<DebugLogMessage>();
 
         #endregion
 
@@ -50,22 +44,13 @@ namespace fireBwall.Logging
 
         public void LogException(Exception e)
         {
-            try
-            {
-                ExceptionLock.AcquireWriterLock(new TimeSpan(0, 1, 0));
-                try
-                {
-                    ExceptionQueue.Enqueue(e);
-                }
-                finally
-                {
-                    ExceptionLock.ReleaseWriterLock();
-                }
-            }
-            catch (ApplicationException app)
-            {
+            if(GeneralConfiguration.Instance.DeveloperMode)
+                ExceptionQueue.Enqueue(e);
+        }
 
-            }
+        public void LogDebugMessage(string message)
+        {
+            DebugQueue.Enqueue(new DebugLogMessage(message));
         }
 
         #endregion

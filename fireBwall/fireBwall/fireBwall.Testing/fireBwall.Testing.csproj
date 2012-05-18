@@ -62,12 +62,6 @@
     <None Include="NUnit\nunit.core.interfaces.dll" />
     <None Include="NUnit\nunit.core.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\fireBwall.Configuration\fireBwall.Configuration.csproj">
-      <Project>{74F27EED-D1D4-4104-9BA6-AF06656BB402}</Project>
-      <Name>fireBwall.Configuration</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

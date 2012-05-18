@@ -245,7 +245,7 @@ namespace SaveFlashVideo
                 {
                     if (tcp.SourcePort == 80 && tcp.ACK)
                     {
-                        if (tcp.FIN || tcp.RST)
+                        if (tcp.FIN)
                         {
                             //finish the file
                             vid.Done();
@@ -262,7 +262,6 @@ namespace SaveFlashVideo
                             {
                                 vid.AddData(data, tcp.SequenceNumber);
                             }
-                            //Console.WriteLine(tcp.SequenceNumber);
                         }
                     }
                 }
@@ -270,23 +269,33 @@ namespace SaveFlashVideo
                 {
                     byte[] data = tcp.GetApplicationLayer_safe();
                     string str = ASCIIEncoding.ASCII.GetString(data);
+                    if (!str.StartsWith("HTTP/1.1 200 OK"))
+                        return null;
                     if (str.Contains("Content-Type: "))
                     {
-                        int contentIndex = str.IndexOf("Content-Type: ") + "Content-Type: ".Length;
-                        string type = str.Substring(contentIndex);
-                        if (!str.StartsWith("HTTP/1.1 200 OK"))
-                            return null;
-                        type = type.Substring(0, type.IndexOf("\r\n"));
+                        string type = null;
+                        string strLen = null;
+                        if (!str.Contains("Content-Length: "))
+                        {
+                            strLen = "0";
+                        }
+                        string[] lines = str.Replace("\r","").Split("\n".ToCharArray());
+                        foreach (string line in lines)
+                        {
+                            if (type == null && line.StartsWith("Content-Type: "))
+                            {
+                                type = line.Replace("Content-Type: ", "").Replace("\n", "");
+                            }
+                            else if (strLen == null && line.StartsWith("Content-Length: "))
+                            {
+                                strLen = line.Replace("Content-Length: ", "").Replace("\n", "");
+                            }
+                            if (type != null && strLen != null)
+                                break;
+                        }
                         if (type.StartsWith("video/") || type == "flv-application/octet-stream" || type.StartsWith("audio/"))
                         {
-                            ulong length = 0;
-                            if (str.Contains("Content-Length: "))
-                            {
-                                int lengthIndex = str.IndexOf("Content-Length: ") + "Content-Length: ".Length;
-                                string strLen = str.Substring(lengthIndex);
-                                length = ulong.Parse(strLen.Substring(0, strLen.IndexOf("\r\n")));
-                            }
-
+                            ulong length = ulong.Parse(strLen);
                             if (!videos.ContainsKey(q))
                             {
                                 VideoInformation vi = new VideoInformation(q, length, tcp.GetNextSequenceNumber(), type);

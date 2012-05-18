@@ -5,13 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fireBwall", "fireBwall\fire
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fireBwall.Testing", "fireBwall.Testing\fireBwall.Testing.csproj", "{C66EE182-43A4-43F0-AA9F-0F1BDD8C1400}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fireBwall.Configuration", "fireBwall.Configuration\fireBwall.Configuration.csproj", "{74F27EED-D1D4-4104-9BA6-AF06656BB402}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fireBwall.Configuration.Testing", "fireBwall.Configuration.Testing\fireBwall.Configuration.Testing.csproj", "{ADDE4203-4A30-439C-925D-FFD8720C02CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fireBwall.Modules", "fireBwall.Modules\fireBwall.Modules.csproj", "{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fireBwall.Logging", "fireBwall.Logging\fireBwall.Logging.csproj", "{ED3A3469-A88C-4F53-B155-2F52EE00C221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,16 +39,6 @@ Global
 		{C66EE182-43A4-43F0-AA9F-0F1BDD8C1400}.Release|Mixed Platforms.Build.0 = Release|x86
 		{C66EE182-43A4-43F0-AA9F-0F1BDD8C1400}.Release|x86.ActiveCfg = Release|x86
 		{C66EE182-43A4-43F0-AA9F-0F1BDD8C1400}.Release|x86.Build.0 = Release|x86
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{74F27EED-D1D4-4104-9BA6-AF06656BB402}.Release|x86.ActiveCfg = Release|Any CPU
 		{ADDE4203-4A30-439C-925D-FFD8720C02CA}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{ADDE4203-4A30-439C-925D-FFD8720C02CA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{ADDE4203-4A30-439C-925D-FFD8720C02CA}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -73,16 +59,6 @@ Global
 		{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}.Release|x86.ActiveCfg = Release|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{ED3A3469-A88C-4F53-B155-2F52EE00C221}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
