@@ -62,7 +62,14 @@ namespace PoisonIvy
             localIP.Text = GetLocalIP().ToString();
             localGateway.Text = ivy.adapter.InterfaceInformation.GetIPProperties().GatewayAddresses[0].Address.ToString();
             localMAC.Text = ivy.adapter.InterfaceInformation.GetPhysicalAddress().ToString();
-            localSubnet.Text = ivy.adapter.InterfaceInformation.GetIPProperties().UnicastAddresses[1].IPv4Mask.ToString();
+
+            ICollection<UnicastIPAddressInformation> tmp = ivy.adapter.InterfaceInformation.GetIPProperties().UnicastAddresses;
+            foreach ( UnicastIPAddressInformation addr in tmp )
+            {
+                // depends on the interface
+                if (null != addr)
+                    localSubnet.Text = addr.IPv4Mask.ToString();
+            }
         }
 
         // return local IPv4 addr
