@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace fireBwall.Modules
 {
-    /// <summary>
+    /*/// <summary>
     /// Flags used to describe how the module handled the packet
     /// </summary>
     [Flags]
@@ -260,7 +260,5 @@ namespace fireBwall.Modules
         {
             return (srcIP.Equals(other.srcIP) && srcPort == other.srcPort && dstIP.Equals(other.dstIP) && dstPort == other.dstPort);
         }
-    }
-}
-
+    }*/
 }

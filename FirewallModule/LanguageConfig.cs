@@ -77,25 +77,25 @@ namespace FM
                 {
                     case "en":
                         cLanguage = Language.ENGLISH;
-                        break;
+                        return twoLetter;
                     case "es":
                         cLanguage = Language.SPANISH;
-                        break;
+                        return twoLetter;
                     case "de":
                         cLanguage = Language.GERMAN;
-                        break;
+                        return twoLetter;
                     case "zh":
                         cLanguage = Language.CHINESE;
-                        break;
+                        return twoLetter;
                     case "ru":
                         cLanguage = Language.RUSSIAN;
-                        break;
+                        return twoLetter;
                     case "pt":
                         cLanguage = Language.PORTUGUESE;
-                        break;
+                        return twoLetter;
                 }
             }
-            else if (cLanguage == Language.NONE)
+            else
             {
                 switch (cLanguage)
                 {
