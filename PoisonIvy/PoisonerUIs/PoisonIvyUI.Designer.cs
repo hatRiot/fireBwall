@@ -48,6 +48,7 @@
             this.poisonBox.Size = new System.Drawing.Size(59, 447);
             this.poisonBox.TabIndex = 6;
             this.poisonBox.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.Load += new System.EventHandler(this.poisonBox_Loaded);
             // 
             // poisonPanel
             // 

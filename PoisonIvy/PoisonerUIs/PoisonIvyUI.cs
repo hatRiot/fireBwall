@@ -24,6 +24,11 @@ namespace PoisonIvy
             listBox1_SelectedIndexChanged(null, null);
         }
 
+        private void poisonBox_Loaded(object sender, EventArgs e)
+        {
+            poisonBox.SelectedIndex = 0;
+        }
+
         /// <summary>
         /// Display the correct UserControl when the user flips through the possible poisoners
         /// </summary>
@@ -31,40 +36,43 @@ namespace PoisonIvy
         /// <param name="e"></param>
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int idx = poisonBox.SelectedIndex;
-            if (idx >= 0)
+            if (poisonBox.Visible)
             {
-                switch ( idx )
+                int idx = poisonBox.SelectedIndex;
+                if (idx >= 0)
                 {
-                    case 0:
-                        ARPUI arp = new ARPUI(ivy);
-                        poisonPanel.Controls.Add(arp);
-                        arp.Dock = DockStyle.Fill;
-                        arp.Visible = true;
-                        arp.Show();
-                        arp.Refresh();
-                        arp.BringToFront();
-                        break;
-                    case 1:
-                        DNSUI dns = new DNSUI(ivy);
-                        poisonPanel.Controls.Add(dns);
-                        dns.Dock = DockStyle.Fill;
-                        dns.Visible = true;
-                        dns.Show();
-                        dns.Refresh();
-                        dns.BringToFront();
-                        break;
-                    case 2:
-                        DHCPUI dhcp = new DHCPUI(ivy);
-                        poisonPanel.Controls.Add(dhcp);
-                        dhcp.Dock = DockStyle.Fill;
-                        dhcp.Visible = true;
-                        dhcp.Show();
-                        dhcp.Refresh();
-                        dhcp.BringToFront();
-                        break;
-                    case 3:
-                        break;
+                    switch (idx)
+                    {
+                        case 0:
+                            ARPUI arp = new ARPUI(ivy);
+                            poisonPanel.Controls.Add(arp);
+                            arp.Dock = DockStyle.Fill;
+                            arp.Visible = true;
+                            arp.Show();
+                            arp.Refresh();
+                            arp.BringToFront();
+                            break;
+                        case 1:
+                            DNSUI dns = new DNSUI(ivy);
+                            poisonPanel.Controls.Add(dns);
+                            dns.Dock = DockStyle.Fill;
+                            dns.Visible = true;
+                            dns.Show();
+                            dns.Refresh();
+                            dns.BringToFront();
+                            break;
+                        case 2:
+                            DHCPUI dhcp = new DHCPUI(ivy);
+                            poisonPanel.Controls.Add(dhcp);
+                            dhcp.Dock = DockStyle.Fill;
+                            dhcp.Visible = true;
+                            dhcp.Show();
+                            dhcp.Refresh();
+                            dhcp.BringToFront();
+                            break;
+                        case 3:
+                            break;
+                    }
                 }
             }
         }

