@@ -57,6 +57,7 @@ namespace fireBwall.Configuration
                         {
                             try
                             {
+                                rwlock.ReleaseReaderLock();
                                 rwlock.AcquireWriterLock(new TimeSpan(0, 1, 0));
                                 try
                                 {
@@ -69,6 +70,7 @@ namespace fireBwall.Configuration
                                 finally
                                 {
                                     rwlock.ReleaseWriterLock();
+                                    rwlock.AcquireReaderLock(new TimeSpan(0, 1, 0));
                                 }
                             }
                             catch (ApplicationException ex)

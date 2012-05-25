@@ -30,6 +30,7 @@ namespace fireBwall.UI
         public DynamicForm()
         {
             ThemeConfiguration.Instance.ThemeChanged += new System.Threading.ThreadStart(ThemeChanged);
+            GeneralConfiguration.Instance.LanguageChanged += LanguageChanged;
             Icon = DynamicForm.GetIcon();
         }
 

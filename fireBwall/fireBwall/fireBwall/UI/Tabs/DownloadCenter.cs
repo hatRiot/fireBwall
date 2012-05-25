@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using fireBwall.Configuration;
+using fireBwall.Updates;
 
 namespace fireBwall.UI.Tabs
 {
@@ -57,7 +58,7 @@ namespace fireBwall.UI.Tabs
 
         private void DownloadCenter_Load(object sender, EventArgs e)
         {
-            
+            ShowFirebwallUpdate();
         }
 
         private void DownloadCenter_FormClosing(object sender, FormClosingEventArgs e)
@@ -81,7 +82,7 @@ namespace fireBwall.UI.Tabs
                 WebClient wc = new WebClient();
                 wc.DownloadFile(meta.downloadUrl, file);
                 System.Diagnostics.Process.Start(file);
-                Program.Close(null, null);
+                Program.Shutdown();
             }
             catch
             {

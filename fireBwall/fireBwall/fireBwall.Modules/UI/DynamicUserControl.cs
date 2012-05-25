@@ -11,6 +11,7 @@ namespace fireBwall.UI
         public DynamicUserControl()
         {
             ThemeConfiguration.Instance.ThemeChanged += new System.Threading.ThreadStart(ThemeChanged);
+            GeneralConfiguration.Instance.LanguageChanged += LanguageChanged;
         }
 
         public virtual void ThemeChanged()

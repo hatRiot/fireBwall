@@ -6,6 +6,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using fireBwall.Modules;
+using fireBwall.Filters.NDIS;
+using fireBwall.Configuration;
 
 namespace fireBwall.UI.Tabs
 {
@@ -51,14 +54,14 @@ namespace fireBwall.UI.Tabs
             // valid idx...
             if (modBox.SelectedIndex >= 0)
             {
-                FirewallModule temp = list.GetModule(modBox.SelectedIndex);
+                NDISModule temp = list.GetModule(modBox.SelectedIndex);
 
-                modData.Text = temp.MetaData.Name;
-                modAuthorField.Text = temp.MetaData.Author;
-                modContactField.Text = temp.MetaData.Contact;
-                modVersionField.Text = temp.MetaData.Version;
-                modDescriptionField.Text = temp.MetaData.Description;
-                modHelpBox.Text = temp.MetaData.HelpString;
+                modData.Text = temp.MetaData.GetMeta().Name;
+                modAuthorField.Text = temp.MetaData.GetMeta().Author;
+                modContactField.Text = temp.MetaData.GetMeta().Contact;
+                modVersionField.Text = temp.MetaData.GetMeta().Version;
+                modDescriptionField.Text = temp.MetaData.GetMeta().Description;
+                modHelpBox.Text = temp.MetaData.GetMeta().Help;
             }
         }
 
@@ -72,14 +75,14 @@ namespace fireBwall.UI.Tabs
             try
             {
                 // grab the first adapter
-                NetworkAdapter first_adapter = NetworkAdapter.GetAllAdapters()[0];
+                INDISFilter first_adapter = ProcessingConfiguration.Instance.NDISFilterList.GetAllAdapters()[0];
                 // get it's module list
-                list = first_adapter.modules;
+                list = first_adapter.Modules;
 
                 // add it to the box
                 for (int i = 0; i < list.Count; ++i)
                 {
-                    modBox.Items.Insert(i, list.GetModule(i).MetaData.Name);
+                    modBox.Items.Insert(i, list.GetModule(i).MetaData.GetMeta().Name);
                 }
 
                 // if there's a set idx, set it

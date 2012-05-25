@@ -706,6 +706,11 @@ namespace fireBwall.Configuration
                 {
                     configuration.PreferredLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
                 }
+                if (configuration.CurrentTheme == null)
+                {
+                    ThemeConfiguration.Instance.CreateDefaultThemes();
+                    configuration.CurrentTheme = "Light";
+                }
                 return true;
             }
             catch (ApplicationException ex)

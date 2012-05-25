@@ -12,8 +12,25 @@ namespace fireBwall.UI.Tabs
 {
     public partial class OptionsDisplay : DynamicUserControl
     {
-        public OptionsDisplay()
+        public OptionsDisplay():base()
         {
+            multistring.SetString(Language.ENGLISH, "Display Icon Popups", "Display Icon Popups");
+            multistring.SetString(Language.ENGLISH, "Language: ", "Language: ");
+
+            multistring.SetString(Language.PORTUGUESE, "Display Icon Popups", "Mostrar Popups Icon");
+            multistring.SetString(Language.PORTUGUESE, "Language: ", "Linguagem: ");
+
+            multistring.SetString(Language.CHINESE, "Display Icon Popups", "显示图标弹出窗口");
+            multistring.SetString(Language.CHINESE, "Language: ", "語言標籤: ");
+
+            multistring.SetString(Language.GERMAN, "Display Icon Popups", "Anzeige Icon Popups");
+            multistring.SetString(Language.GERMAN, "Language: ", "Sprachensiegel: ");
+
+            multistring.SetString(Language.RUSSIAN, "Display Icon Popups", "Показать Иконка всплывающие окна");
+            multistring.SetString(Language.RUSSIAN, "Language: ", "Язык этикетки: ");
+
+            multistring.SetString(Language.SPANISH, "Display Icon Popups", "Mostrar ventanas emergentes Icono");
+            multistring.SetString(Language.SPANISH, "Language: ", "Lenguaje de etiquetas: ");
             InitializeComponent();
         }
 
@@ -37,24 +54,6 @@ namespace fireBwall.UI.Tabs
             foreach (string theme in ThemeConfiguration.Instance.Schemes.Keys)
                 themeBox.Items.Add(theme);
             themeBox.SelectedItem = GeneralConfiguration.Instance.CurrentTheme;
-
-            multistring.SetString(Language.ENGLISH, "Display Icon Popups", "Display Icon Popups");
-            multistring.SetString(Language.ENGLISH, "Language: ", "Language: ");
-
-            multistring.SetString(Language.PORTUGUESE, "Display Icon Popups", "Mostrar Popups Icon");
-            multistring.SetString(Language.PORTUGUESE, "Language: ", "Linguagem: ");
-
-            multistring.SetString(Language.CHINESE, "Display Icon Popups", "显示图标弹出窗口");
-            multistring.SetString(Language.CHINESE, "Language: ", "語言標籤: ");
-
-            multistring.SetString(Language.GERMAN, "Display Icon Popups", "Anzeige Icon Popups");
-            multistring.SetString(Language.GERMAN, "Language: ", "Sprachensiegel: ");
-
-            multistring.SetString(Language.RUSSIAN, "Display Icon Popups", "Показать Иконка всплывающие окна");
-            multistring.SetString(Language.RUSSIAN, "Language: ", "Язык этикетки: ");
-
-            multistring.SetString(Language.SPANISH, "Display Icon Popups", "Mostrar ventanas emergentes Icono");
-            multistring.SetString(Language.SPANISH, "Language: ", "Lenguaje de etiquetas: ");
 
             switch (GeneralConfiguration.Instance.PreferredLanguage)
             {
@@ -166,7 +165,7 @@ namespace fireBwall.UI.Tabs
 
         private void themeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ThemeConfiguration.Instance.ChangeTheme(themeBox.SelectedText);
+            ThemeConfiguration.Instance.ChangeTheme((string)themeBox.SelectedItem);
         }
 
         private void button1_Click(object sender, EventArgs e)

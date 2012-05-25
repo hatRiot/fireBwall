@@ -231,7 +231,7 @@ namespace fireBwall.Configuration
                         foreach (string file in Directory.GetFiles(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
                         {
                             XmlSerializer serializer = new XmlSerializer(typeof(ColorScheme));
-                            TextReader reader = new StreamReader(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes" + Path.DirectorySeparatorChar + file);
+                            TextReader reader = new StreamReader(file);
                             ColorScheme scheme = (ColorScheme)serializer.Deserialize(reader);
                             reader.Close();
                             schemes[scheme.Name] = scheme;

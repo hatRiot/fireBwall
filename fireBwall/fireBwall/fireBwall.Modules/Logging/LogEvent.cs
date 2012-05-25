@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using fireBwall.UI;
 
 namespace fireBwall.Logging
 {
@@ -7,6 +8,7 @@ namespace fireBwall.Logging
     {
         public string Module;
         public string Message;
+        public DynamicUserControl userControl;
         public DateTime time;
 
         public LogEvent(string message, string module)

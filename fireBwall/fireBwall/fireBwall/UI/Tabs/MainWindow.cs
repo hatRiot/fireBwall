@@ -46,13 +46,12 @@ namespace fireBwall.UI.Tabs
 
 			private void MainWindow_Load(object sender, EventArgs e) 
             {
-                LogCenter.ti = new TrayIcon();
-                Program.uc = new UpdateChecker();
-                Program.uc.Updater();
-                PassThru.Tabs.DownloadCenter.Instance.Width = 800;
-                PassThru.Tabs.DownloadCenter.Instance.Height = 600;
-                PassThru.Tabs.DownloadCenter.Instance.Show();
-                PassThru.Tabs.DownloadCenter.Instance.Hide();
+                Program.trayIcon = new TrayIcon();
+                Program.OnShutdown += Program.trayIcon.Dispose;
+                Program.OnShutdown += Program.updater.Close;
+                Program.OnShutdown += LogCenter.Instance.Kill;
+                Program.updater = new Updates.UpdateChecker();
+                Program.updater.Updater();
                 // call the log purger
                 LogCenter.Instance.CleanLogs();
 
@@ -62,8 +61,8 @@ namespace fireBwall.UI.Tabs
                 splitContainer1.Panel2.Controls.Add(log);
 
                 // load up the adapter control handler
-				ac = new AdapterControl();
-				ac.Dock = DockStyle.Fill;
+                ac = new AdapterControl();
+                ac.Dock = DockStyle.Fill;
 
                 // load up the options tab handler
                 od = new OptionsDisplay();
