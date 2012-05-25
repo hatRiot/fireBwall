@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using fireBwall.Logging;
+using System.Globalization;
 
 namespace fireBwall.Configuration
 {
@@ -66,13 +67,19 @@ namespace fireBwall.Configuration
 
         #endregion
 
+        #region Event
+
+        public event System.Threading.ThreadStart LanguageChanged;
+
+        #endregion
+
         #region Members
 
         public string PreferredLanguage
         {
             get
             {
-                string ret = "English";
+                string ret = "en";
                 try
                 {
                     locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
@@ -121,6 +128,8 @@ namespace fireBwall.Configuration
                 {
                     LogCenter.Instance.LogException(ex);
                 }
+                if (LanguageChanged != null)
+                    LanguageChanged();
             }
         }
 
@@ -668,6 +677,7 @@ namespace fireBwall.Configuration
             }
             catch (ApplicationException ex)
             {
+                LogCenter.Instance.LogException(ex);
                 return false;
             }
         }
@@ -692,10 +702,15 @@ namespace fireBwall.Configuration
                 {
                     locker.ReleaseWriterLock();
                 }
+                if (configuration.PreferredLanguage == null)
+                {
+                    configuration.PreferredLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+                }
                 return true;
             }
             catch (ApplicationException ex)
             {
+                LogCenter.Instance.LogException(ex);
                 return false;
             }
         }

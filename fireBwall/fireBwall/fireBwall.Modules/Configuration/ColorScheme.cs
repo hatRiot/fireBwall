@@ -29,6 +29,11 @@ namespace fireBwall.Configuration
                 Blue = c.B;
             }
 
+            public System.Drawing.Color ToSystemColor()
+            {
+                return System.Drawing.Color.FromArgb(Alpha, Red, Green, Blue);
+            }
+
             [XmlAttribute("A")]
             public byte Alpha = 0x00;
             [XmlAttribute("R")]

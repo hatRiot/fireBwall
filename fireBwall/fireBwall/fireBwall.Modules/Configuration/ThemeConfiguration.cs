@@ -4,6 +4,10 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Threading;
+using fireBwall.Logging;
 
 namespace fireBwall.Configuration
 {
@@ -13,6 +17,7 @@ namespace fireBwall.Configuration
 
         private static volatile ThemeConfiguration instance;
         private static object syncRoot = new Object();
+        private ReaderWriterLock locker = new ReaderWriterLock();
 
         private ThemeConfiguration() { }
 
@@ -23,12 +28,12 @@ namespace fireBwall.Configuration
         {
             get 
             {
-                lock (syncRoot) 
+                lock (syncRoot)
                 {
                     if (instance == null)
                         instance = new ThemeConfiguration();
-                    return instance; 
-                }              
+                }
+                return instance; 
             }
         }
 
@@ -46,7 +51,24 @@ namespace fireBwall.Configuration
         {
             get
             {
-                return schemes;
+                Dictionary<string, ColorScheme> ret = new Dictionary<string, ColorScheme>();
+                try
+                {
+                    locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        ret = new Dictionary<string, ColorScheme>(schemes);
+                    }
+                    finally
+                    {
+                        locker.ReleaseReaderLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+                return ret;
             }
         }
 
@@ -62,34 +84,138 @@ namespace fireBwall.Configuration
 
         public bool IsValid(ColorScheme cs)
         {
-            if (!cs.colors.ContainsKey("FlatButtonBack") 
-                || !cs.colors.ContainsKey("FlatButtonFore")
-                || !cs.colors.ContainsKey("ButtonBack")
-                || !cs.colors.ContainsKey("ButtonFore")
-                || !cs.colors.ContainsKey("GridColor")
-                || !cs.colors.ContainsKey("GridForeColor")
-                || !cs.colors.ContainsKey("GridBackColor")
-                || !cs.colors.ContainsKey("GridHeaderFore")
-                || !cs.colors.ContainsKey("GridHeaderBack")
-                || !cs.colors.ContainsKey("GridCellFore")
-                || !cs.colors.ContainsKey("GridCellBack")
-                || !cs.colors.ContainsKey("GridSelectCellBack")
-                || !cs.colors.ContainsKey("GridSelectCellFore")
-                || !cs.colors.ContainsKey("Back")
-                || !cs.colors.ContainsKey("Fore"))
-                return false;
-            if (string.IsNullOrWhiteSpace(cs.Name) || string.IsNullOrWhiteSpace(cs.Base64Image))
-                return false;
-            return true;
+            bool ret = true;
+            try
+            {
+                locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                try
+                {
+                    if (!cs.colors.ContainsKey("FlatButtonBack")
+                        || !cs.colors.ContainsKey("FlatButtonFore")
+                        || !cs.colors.ContainsKey("ButtonBack")
+                        || !cs.colors.ContainsKey("ButtonFore")
+                        || !cs.colors.ContainsKey("GridColor")
+                        || !cs.colors.ContainsKey("GridForeColor")
+                        || !cs.colors.ContainsKey("GridBackColor")
+                        || !cs.colors.ContainsKey("GridHeaderFore")
+                        || !cs.colors.ContainsKey("GridHeaderBack")
+                        || !cs.colors.ContainsKey("GridCellFore")
+                        || !cs.colors.ContainsKey("GridCellBack")
+                        || !cs.colors.ContainsKey("GridSelectCellBack")
+                        || !cs.colors.ContainsKey("GridSelectCellFore")
+                        || !cs.colors.ContainsKey("Back")
+                        || !cs.colors.ContainsKey("Fore"))
+                        ret = false;
+                    if (string.IsNullOrWhiteSpace(cs.Name) || string.IsNullOrWhiteSpace(cs.Base64Image))
+                        ret = false;
+                }
+                finally
+                {
+                    locker.ReleaseReaderLock();
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
+                ret = false;
+            }
+            return ret;
+        }
+
+        public Image GetCurrentBanner()
+        {
+            Image ret = null;
+            try
+            {
+                locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                try
+                {
+                    string currentTheme = GeneralConfiguration.Instance.CurrentTheme;
+                    MemoryStream ms = new MemoryStream(Convert.FromBase64String(schemes[currentTheme].Base64Image));
+                    ret = Bitmap.FromStream(ms);
+                }
+                finally
+                {
+                    locker.ReleaseReaderLock();
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
+            }
+            return ret;
+        }
+
+        public void SetColorScheme(Control control)
+        {
+            try
+            {
+                locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                try
+                {
+                    string currentTheme = GeneralConfiguration.Instance.CurrentTheme;
+                    if (control is Button)
+                    {
+                        if (((Button)control).FlatStyle == FlatStyle.Flat)
+                        {
+                            control.BackColor = schemes[currentTheme].colors["FlatButtonBack"].ToSystemColor();
+                            control.ForeColor = schemes[currentTheme].colors["FlatButtonFore"].ToSystemColor();
+                        }
+                        else
+                        {
+                            control.BackColor = schemes[currentTheme].colors["ButtonBack"].ToSystemColor();
+                            control.ForeColor = schemes[currentTheme].colors["ButtonFore"].ToSystemColor();
+                        }
+                    }
+                    else if (control is DataGridView)
+                    {
+                        ((DataGridView)control).GridColor = schemes[currentTheme].colors["GridColor"].ToSystemColor();
+                        ((DataGridView)control).ForeColor = schemes[currentTheme].colors["GridForeColor"].ToSystemColor();
+                        ((DataGridView)control).BackgroundColor = schemes[currentTheme].colors["GridBackColor"].ToSystemColor();
+                        ((DataGridView)control).ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle() { ForeColor = schemes[currentTheme].colors["GridHeaderFore"].ToSystemColor(), BackColor = schemes[currentTheme].colors["GridHeaderBack"].ToSystemColor(), SelectionForeColor = schemes[currentTheme].colors["GridHeaderFore"].ToSystemColor(), SelectionBackColor = schemes[currentTheme].colors["GridHeaderBack"].ToSystemColor() };
+                        ((DataGridView)control).DefaultCellStyle = new DataGridViewCellStyle() { ForeColor = schemes[currentTheme].colors["GridCellFore"].ToSystemColor(), BackColor = schemes[currentTheme].colors["GridCellBack"].ToSystemColor(), SelectionBackColor = schemes[currentTheme].colors["GridSelectCellBack"].ToSystemColor(), SelectionForeColor = schemes[currentTheme].colors["GridSelectCellFore"].ToSystemColor() };
+                    }
+                    else
+                    {
+                        control.BackColor = schemes[currentTheme].colors["Back"].ToSystemColor();
+                        control.ForeColor = schemes[currentTheme].colors["Fore"].ToSystemColor();
+                    }
+                    foreach (Control c in control.Controls)
+                        SetColorScheme(c);
+                }
+                finally
+                {
+                    locker.ReleaseReaderLock();
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
+            }
         }
 
         public void ChangeTheme(string theme)
         {
-            if (schemes.ContainsKey(theme) && IsValid(schemes[theme]))
+            try
             {
-                GeneralConfiguration.Instance.CurrentTheme = theme;
-                if (ThemeChanged != null)
-                    ThemeChanged();
+                locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                try
+                {
+                    if (schemes.ContainsKey(theme) && IsValid(schemes[theme]))
+                    {
+                        GeneralConfiguration.Instance.CurrentTheme = theme;
+                        if (ThemeChanged != null)
+                            ThemeChanged();
+                    }
+                }
+                finally
+                {
+                    locker.ReleaseReaderLock();
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
             }
         }
 
@@ -97,13 +223,32 @@ namespace fireBwall.Configuration
         {
             if (Directory.Exists(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
             {
-                foreach (string file in Directory.GetFiles(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
+                try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(ColorScheme));
-                    TextReader reader = new StreamReader(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes" + Path.DirectorySeparatorChar + file);
-                    ColorScheme scheme = (ColorScheme)serializer.Deserialize(reader);
-                    reader.Close();
-                    schemes[scheme.Name] = scheme;
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        foreach (string file in Directory.GetFiles(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(ColorScheme));
+                            TextReader reader = new StreamReader(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes" + Path.DirectorySeparatorChar + file);
+                            ColorScheme scheme = (ColorScheme)serializer.Deserialize(reader);
+                            reader.Close();
+                            schemes[scheme.Name] = scheme;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
                 }
             }
         }
@@ -2026,7 +2171,7 @@ namespace fireBwall.Configuration
                                                 UoxrSWJTjfe+P/78+PGn7JPseswYHxuO3/3x58ePP/fG2Vdvnvvjz89v/PE6CcJWsaD748/fn/wn
                                                 qnpkRkJM28SfEMw0VD+T1/gTRc68UZJIh8jLW3GiEmsVNqpcbiBVXB0rlJI2N2hn4BzS/x8AUB3v
                                                 r8POYKEAAAAASUVORK5CYII=".Replace("\r", "").Replace("\n", "").Replace(" ", "").Replace("\t", "");
-            schemes["Light"] = scheme;
+            AddScheme(scheme);
             s.Name = "Mordor";
             s.colors["FlatButtonBack"] = new ColorScheme.Color(System.Drawing.Color.Black);
             s.colors["FlatButtonFore"] = new ColorScheme.Color(System.Drawing.Color.White);
@@ -2043,35 +2188,60 @@ namespace fireBwall.Configuration
             s.colors["GridSelectCellFore"] = new ColorScheme.Color(System.Drawing.Color.White);
             s.colors["Back"] = new ColorScheme.Color(System.Drawing.Color.FromArgb(16, 0, 0));
             s.colors["Fore"] = new ColorScheme.Color(System.Drawing.Color.White);
-            schemes[s.Name] = s;
+            AddScheme(s);
+        }
+
+        public void AddScheme(ColorScheme scheme)
+        {
+            try
+            {
+                locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                try
+                {
+                    schemes[scheme.Name] = scheme;
+                }
+                finally
+                {
+                    locker.ReleaseWriterLock();
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
+            }
         }
 
         public void Save()
         {
             if (!Directory.Exists(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
                 Directory.CreateDirectory(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes");
-            foreach (ColorScheme scheme in schemes.Values)
+            try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(ColorScheme));
-                TextWriter writer = new StreamWriter(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes" + Path.DirectorySeparatorChar + scheme.Name);
-                serializer.Serialize(writer, scheme);
-                writer.Close();
-            }
-        }
-
-        public void DeleteThemes()
-        {
-            if (Directory.Exists(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
-            {
-                foreach (string file in Directory.GetFiles(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
+                locker.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                try
                 {
-                    if(File.Exists(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes" + Path.DirectorySeparatorChar + file))
-                        File.Delete(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes" + Path.DirectorySeparatorChar + file);
+                    foreach (ColorScheme scheme in schemes.Values)
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(ColorScheme));
+                        TextWriter writer = new StreamWriter(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes" + Path.DirectorySeparatorChar + scheme.Name);
+                        serializer.Serialize(writer, scheme);
+                        writer.Close();
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogCenter.Instance.LogException(e);
+                }
+                finally
+                {
+                    locker.ReleaseReaderLock();
                 }
             }
-            schemes.Clear();
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
+            }
         }
-
         #endregion
     }
 }

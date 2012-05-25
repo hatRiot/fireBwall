@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Threading;
+using fireBwall.UI.Tabs;
 using fireBwall.Configuration;
 
 namespace fireBwall
@@ -23,11 +24,10 @@ namespace fireBwall
         [STAThread]
         static void Main()
         {
-            fireBwall.Configuration.GeneralConfiguration.Instance.PreferredLanguage = "English";
-            fireBwall.Configuration.GeneralConfiguration.Instance.Save();
+            ConfigurationManagement.Instance.LoadAllConfigurations();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainWindow());
         }
     }
 }
