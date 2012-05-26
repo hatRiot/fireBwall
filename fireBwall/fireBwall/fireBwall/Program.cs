@@ -27,9 +27,12 @@ namespace fireBwall
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            ConfigurationManagement.Instance.ConfigurationPath = "temp";
+            if (args.Length != 0)
+            {
+                ConfigurationManagement.Instance.ConfigurationPath = args[0];
+            }            
             ConfigurationManagement.Instance.LoadAllConfigurations();
             foreach (INDISFilter filter in ProcessingConfiguration.Instance.NDISFilterList.GetAllAdapters())
             {

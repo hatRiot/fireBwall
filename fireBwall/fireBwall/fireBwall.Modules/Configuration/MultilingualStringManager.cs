@@ -15,7 +15,9 @@ namespace fireBwall.Configuration
         PORTUGUESE,
         JAPANESE,
         ITALIAN,
-        FRENCH
+        FRENCH,
+        HEBREW,
+        DUTCH
     }
 
     public class MultilingualStringManager
@@ -53,6 +55,12 @@ namespace fireBwall.Configuration
                 case Language.FRENCH:
                     SetString("fr", name, value);
                     break;
+                case Language.HEBREW:
+                    SetString("he", name, value);
+                    break;
+                case Language.DUTCH:
+                    SetString("nl", name, value);
+                    break;
             }
         }
 
@@ -70,7 +78,9 @@ namespace fireBwall.Configuration
             string lang = "en";
             if (strings.ContainsKey(GeneralConfiguration.Instance.PreferredLanguage))
                 lang = GeneralConfiguration.Instance.PreferredLanguage;
-            return strings[lang][name];
+            if(strings[lang].ContainsKey(name))
+                return strings[lang][name];
+            return strings["en"][name];
         }
     }
 }

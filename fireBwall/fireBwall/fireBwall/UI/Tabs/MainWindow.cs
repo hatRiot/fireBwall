@@ -77,6 +77,16 @@ namespace fireBwall.UI.Tabs
                 multistring.SetString(Language.ENGLISH, "Adapters", "Adapters");
                 multistring.SetString(Language.ENGLISH, "Help", "Help");
 
+                multistring.SetString(Language.DUTCH, "Log", "Log");
+                multistring.SetString(Language.DUTCH, "Options", "Opties");
+                multistring.SetString(Language.DUTCH, "Adapters", "Adapters");
+                multistring.SetString(Language.DUTCH, "Help", "Help");
+
+                multistring.SetString(Language.HEBREW, "Log", "יומן רישום");
+                multistring.SetString(Language.HEBREW, "Options", "אפשרויות");
+                multistring.SetString(Language.HEBREW, "Adapters", "מתאמים");
+                multistring.SetString(Language.HEBREW, "Help", "עזרה");
+
                 multistring.SetString(Language.CHINESE, "Log", "登录");
                 multistring.SetString(Language.CHINESE, "Options", "选项");
                 multistring.SetString(Language.CHINESE, "Adapters", "适配器");

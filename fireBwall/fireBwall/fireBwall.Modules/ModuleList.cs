@@ -17,12 +17,7 @@ namespace fireBwall.Modules
         [Serializable]
         public class ModuleOrder
         {
-            public KeyValuePair<bool, string>[] order = new KeyValuePair<bool, string>[0];
-            public List<KeyValuePair<bool, string>> Order
-            {
-                get { return new List<KeyValuePair<bool, string>>(order); }
-                set { order = value.ToArray(); }
-            }
+            public KeyValuePair<bool, string>[] Order = new KeyValuePair<bool, string>[0];
         }
 
         List<int> ProcessingIndex = new List<int>();
@@ -45,7 +40,7 @@ namespace fireBwall.Modules
                 Directory.CreateDirectory(folder);
             string file = folder + Path.DirectorySeparatorChar + "modules.cfg";
 
-            ModuleOrder mo = new ModuleOrder() { Order = moduleOrder };
+            ModuleOrder mo = new ModuleOrder() { Order = moduleOrder.ToArray() };
 
             try
             {
@@ -82,7 +77,7 @@ namespace fireBwall.Modules
                 TextReader reader = new StreamReader(file);
                 ModuleOrder mo = (ModuleOrder)serializer.Deserialize(reader);
                 reader.Close();
-                moduleOrder = mo.Order;
+                moduleOrder = new List<KeyValuePair<bool,string>>(mo.Order);
             }
             catch (Exception e)
             {

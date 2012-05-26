@@ -35,6 +35,14 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.ENGLISH, "Disabled", "Disabled");
             multistring.SetString(Language.ENGLISH, "Configure Device", "Configure Device");
 
+            multistring.SetString(Language.DUTCH, "Enabled", "Ingeschakeld");
+            multistring.SetString(Language.DUTCH, "Disabled", "Niet ingeschakeld");
+            multistring.SetString(Language.DUTCH, "Configure Device", "Apparaat configureren");
+
+            multistring.SetString(Language.HEBREW, "Enabled", "זמין");
+            multistring.SetString(Language.HEBREW, "Disabled", "לא זמין");
+            multistring.SetString(Language.HEBREW, "Configure Device", "קביעת תצורה של ההתקן");
+
             multistring.SetString(Language.PORTUGUESE, "Enabled", "Permitir");
             multistring.SetString(Language.PORTUGUESE, "Disabled", "Desativado");
             multistring.SetString(Language.PORTUGUESE, "Configure Device", "Configurar Dispositivo");

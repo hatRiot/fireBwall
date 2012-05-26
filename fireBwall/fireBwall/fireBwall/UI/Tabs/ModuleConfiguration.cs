@@ -25,6 +25,18 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.ENGLISH, "Move Down", "Move Down");
             multistring.SetString(Language.ENGLISH, "Move Up", "Move Up");
 
+            multistring.SetString(Language.DUTCH, "Enable/Disable", "Inschakelen/uitschakelen");
+            multistring.SetString(Language.DUTCH, "Open Configuration", "Open configuratie");
+            multistring.SetString(Language.DUTCH, "Help", "Help");
+            multistring.SetString(Language.DUTCH, "Move Down", "Omlaag verplaatsen");
+            multistring.SetString(Language.DUTCH, "Move Up", "Omhoog");
+
+            multistring.SetString(Language.HEBREW, "Enable/Disable", "הפעל/בטל");
+            multistring.SetString(Language.HEBREW, "Open Configuration", "תצורת פתוח");
+            multistring.SetString(Language.HEBREW, "Help", "עזרה");
+            multistring.SetString(Language.HEBREW, "Move Down", "הזז למטה");
+            multistring.SetString(Language.HEBREW, "Move Up", "הזז למעלה");
+
             multistring.SetString(Language.PORTUGUESE, "Enable/Disable", "Activar / Desactivar");
             multistring.SetString(Language.PORTUGUESE, "Open Configuration", "Abrir Configuração");
             multistring.SetString(Language.PORTUGUESE, "Help", "Ajudar");
@@ -114,6 +126,7 @@ namespace fireBwall.UI.Tabs
             loading = true;
             UpdateView();
             LanguageChanged();
+            ThemeChanged();
 
             loading = false;
             if (checkedListBoxModules.Items.Count != 0)

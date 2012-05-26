@@ -41,11 +41,11 @@
             this.textBoxDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxDetails.ForeColor = System.Drawing.Color.White;
-            this.textBoxDetails.Location = new System.Drawing.Point(83, 3);
+            this.textBoxDetails.Location = new System.Drawing.Point(127, 3);
             this.textBoxDetails.Multiline = true;
             this.textBoxDetails.Name = "textBoxDetails";
             this.textBoxDetails.ReadOnly = true;
-            this.textBoxDetails.Size = new System.Drawing.Size(189, 69);
+            this.textBoxDetails.Size = new System.Drawing.Size(104, 69);
             this.textBoxDetails.TabIndex = 0;
             this.textBoxDetails.Text = "1\r\n2\r\n3\r\n4\r\n5";
             // 
@@ -56,9 +56,9 @@
             this.buttonConfig.FlatAppearance.BorderSize = 0;
             this.buttonConfig.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonConfig.ForeColor = System.Drawing.Color.White;
-            this.buttonConfig.Location = new System.Drawing.Point(278, 3);
+            this.buttonConfig.Location = new System.Drawing.Point(237, 3);
             this.buttonConfig.Name = "buttonConfig";
-            this.buttonConfig.Size = new System.Drawing.Size(64, 69);
+            this.buttonConfig.Size = new System.Drawing.Size(105, 69);
             this.buttonConfig.TabIndex = 0;
             this.buttonConfig.Text = "Configure Device";
             this.buttonConfig.UseVisualStyleBackColor = false;
@@ -67,9 +67,9 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 124F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 111F));
             this.tableLayoutPanel1.Controls.Add(this.buttonConfig, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.textBoxDetails, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.button1, 0, 0);
@@ -90,7 +90,7 @@
             this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Location = new System.Drawing.Point(3, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(74, 69);
+            this.button1.Size = new System.Drawing.Size(118, 69);
             this.button1.TabIndex = 1;
             this.button1.Text = "Enabled";
             this.button1.UseVisualStyleBackColor = false;

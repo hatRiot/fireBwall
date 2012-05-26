@@ -84,7 +84,7 @@ namespace fireBwall.Modules
                 string file = folder + Path.DirectorySeparatorChar + adapter.GetAdapterInformation().Id + "-" + MetaData.GetMeta().Name + ".cfg";
 
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
-                TextWriter writer = new StreamWriter(file);
+                TextWriter writer = new StreamWriter(file, false);
                 serializer.Serialize(writer, toSerialize);
                 writer.Close();
             }

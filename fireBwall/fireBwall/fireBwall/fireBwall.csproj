@@ -123,8 +123,14 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UI\Tabs\AdapterDisplay.resx">
+      <DependentUpon>AdapterDisplay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Tabs\ColorSchemeEditor.resx">
       <DependentUpon>ColorSchemeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Tabs\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Tabs\OptionsDisplay.resx">
       <DependentUpon>OptionsDisplay.cs</DependentUpon>

@@ -29,6 +29,36 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.ENGLISH, "Check", "Check on Start Up");
             multistring.SetString(Language.ENGLISH, "Inter", "Check on Interval");
 
+            multistring.SetString(Language.DUTCH, "Display Icon Popups", "Display pictogram Popups");
+            multistring.SetString(Language.DUTCH, "Language: ", "Taal: ");
+            multistring.SetString(Language.DUTCH, "Start Minimized", "Geminimaliseerd starten");
+            multistring.SetString(Language.DUTCH, "Interval>9", "De interval moet 10 minuten of meer");
+            multistring.SetString(Language.DUTCH, "Dev", "Ontwikkelaarsmodus");
+            multistring.SetString(Language.DUTCH, "MaxLog", "Maximale Logs:");
+            multistring.SetString(Language.DUTCH, "MaxPLog", "Maximale Packet Logs:");
+            multistring.SetString(Language.DUTCH, "Theme", "Thema:");
+            multistring.SetString(Language.DUTCH, "MinInt", "Interval in minuten:");
+            multistring.SetString(Language.DUTCH, "GenConf", "Algemene configuratie");
+            multistring.SetString(Language.DUTCH, "UpConf", "Bijwerkopties");
+            multistring.SetString(Language.DUTCH, "EditCurrent", "Bewerken");
+            multistring.SetString(Language.DUTCH, "Check", "Controleren op opstarten");
+            multistring.SetString(Language.DUTCH, "Inter", "Controleren op Interval");
+
+            multistring.SetString(Language.HEBREW, "Display Icon Popups", "הצג סמל הודעות מוקפצות");
+            multistring.SetString(Language.HEBREW, "Language: ", "שפה:");
+            multistring.SetString(Language.HEBREW, "Start Minimized", "הפעל במצב ממוזער");
+            multistring.SetString(Language.HEBREW, "Interval>9", "מרווח הזמן חייב להיות 10 דקות ומעלה");
+            multistring.SetString(Language.HEBREW, "Dev", "מצב מפתח");
+            multistring.SetString(Language.HEBREW, "MaxLog", "יומני רישום של מקס:");
+            multistring.SetString(Language.HEBREW, "MaxPLog", "יומני רישום של מנה מירבי:");
+            multistring.SetString(Language.HEBREW, "Theme", "דירוג:");
+            multistring.SetString(Language.HEBREW, "MinInt", "מרווח הזמן בדקות:");
+            multistring.SetString(Language.HEBREW, "GenConf", "תצורה כלליות");
+            multistring.SetString(Language.HEBREW, "UpConf", "אפשרויות עדכון");
+            multistring.SetString(Language.HEBREW, "EditCurrent", "עריכה");
+            multistring.SetString(Language.HEBREW, "Check", "בדיקת הפעלה");
+            multistring.SetString(Language.HEBREW, "Inter", "בדוק מרווח");
+
             multistring.SetString(Language.PORTUGUESE, "Display Icon Popups", "Mostrar Popups Icon");
             multistring.SetString(Language.PORTUGUESE, "Language: ", "Linguagem: ");
             multistring.SetString(Language.PORTUGUESE, "Start Minimized", "Iniciar minimizado");
@@ -203,6 +233,12 @@ namespace fireBwall.UI.Tabs
                 case "it":
                     languageBox.SelectedIndex = 9;
                     break;
+                case "he":
+                    languageBox.SelectedIndex = 10;
+                    break;
+                case "nl":
+                    languageBox.SelectedIndex = 11;
+                    break;
             }
             checkBox1.Checked = GeneralConfiguration.Instance.CheckUpdateOnStartup;
             checkBox2.Checked = GeneralConfiguration.Instance.IntervaledUpdateChecks;
@@ -280,6 +316,12 @@ namespace fireBwall.UI.Tabs
                     break;
                 case 9:
                     GeneralConfiguration.Instance.PreferredLanguage = "it";
+                    break;
+                case 10:
+                    GeneralConfiguration.Instance.PreferredLanguage = "he";
+                    break;
+                case 11:
+                    GeneralConfiguration.Instance.PreferredLanguage = "nl";
                     break;
             }
         }

@@ -31,6 +31,7 @@
                 this.tabPage3 = new System.Windows.Forms.Button();
                 this.tabPage2 = new System.Windows.Forms.Button();
                 this.tabPage1 = new System.Windows.Forms.Button();
+                ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
                 this.splitContainer1.Panel1.SuspendLayout();
                 this.splitContainer1.SuspendLayout();
                 this.SuspendLayout();
@@ -126,12 +127,13 @@
                 this.ForeColor = System.Drawing.Color.White;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
                 this.Name = "MainWindow";
-                this.Text = "fireBwall v0.3.11.0";
+                this.Text = "fireBwall v0.3.12.0";
                 this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
                 this.Load += new System.EventHandler(this.MainWindow_Load);
                 this.Resize += new System.EventHandler(this.MainWindow_Resize);
                 this.splitContainer1.Panel1.ResumeLayout(false);
                 this.splitContainer1.Panel1.PerformLayout();
+                ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
                 this.splitContainer1.ResumeLayout(false);
                 this.ResumeLayout(false);
 
