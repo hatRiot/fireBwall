@@ -128,7 +128,7 @@ namespace fireBwall.Modules
                 }
                 catch (ArgumentException ae)
                 {
-                    LogCenter.Instance.LogEvent(new LogEvent("Module attempted load twice.", mod.MetaData.GetMeta().Name));
+                    LogCenter.Instance.LogEvent(new LogEvent("Module attempted load twice.", mod));
                     LogCenter.Instance.LogException(ae);
                 }
                 catch (Exception e)
@@ -149,9 +149,9 @@ namespace fireBwall.Modules
                 }
             }
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            if (Directory.Exists(folder + Path.DirectorySeparatorChar + "firebwall" + Path.DirectorySeparatorChar + "modules"))
+            if (Directory.Exists(Configuration.ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "modules"))
             {
-                DirectoryInfo di = new DirectoryInfo(folder + Path.DirectorySeparatorChar + "firebwall" + Path.DirectorySeparatorChar + "modules");
+                DirectoryInfo di = new DirectoryInfo(Configuration.ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "modules");
                 foreach (FileInfo fi in di.GetFiles())
                 {
                     LoadModule(fi.FullName);

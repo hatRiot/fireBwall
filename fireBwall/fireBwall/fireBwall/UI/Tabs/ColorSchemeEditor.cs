@@ -20,7 +20,11 @@ namespace fireBwall.UI.Tabs
         public ColorSchemeEditor(string themeName) : base()
         {
             this.themeName = themeName;
-            theme = ThemeConfiguration.Instance.Schemes[themeName];
+            theme = new ColorScheme();
+            ColorScheme temp = ThemeConfiguration.Instance.Schemes[themeName];
+            theme.Base64Image = temp.Base64Image;
+            theme.colors = new SerializableDictionary<string, ColorScheme.Color>(temp.colors);
+            theme.Name = temp.Name;
             InitializeComponent();
         }
 
@@ -49,13 +53,13 @@ namespace fireBwall.UI.Tabs
             {
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
-                    theme.colors[(string)row.Cells[0].Value] = new ColorScheme.Color((byte)row.Cells[1].Value, (byte)row.Cells[2].Value, (byte)row.Cells[3].Value, (byte)row.Cells[4].Value);
+                    theme.colors[(string)row.Cells[0].Value] = new ColorScheme.Color(Convert.ToByte(row.Cells[1].Value), Convert.ToByte(row.Cells[2].Value), Convert.ToByte(row.Cells[3].Value), Convert.ToByte(row.Cells[4].Value));
                 }
             }
             catch { }
             ThemeConfiguration.Instance.AddScheme(theme);
             ThemeConfiguration.Instance.Save();
-            ThemeConfiguration.Instance.ChangeTheme(themeName);
+            ThemeConfiguration.Instance.ChangeTheme(theme.Name, true);
         }
 
         [STAThread]

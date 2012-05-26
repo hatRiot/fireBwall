@@ -13,8 +13,6 @@ namespace fireBwall.UI.Tabs
     /// </summary>
     public class TrayIcon
     {
-        static bool showPopups;
-        static bool startMinimized;
         static TrayPopup popup;
 
         void Shutdown(object o, EventArgs args)
@@ -39,6 +37,7 @@ namespace fireBwall.UI.Tabs
             links.Add(new MenuItem("Reddit", new EventHandler(ToReddit)));
             links.Add(new MenuItem("Twitter", new EventHandler(ToTwitter)));
             links.Add(new MenuItem("fireBwall's Modules", new EventHandler(ToModules)));
+            links.Add(new MenuItem("fireBwall's Themes", new EventHandler(ToThemes)));
             links.Add(new MenuItem("fireBwall Forum", new EventHandler(ToForum)));
             links.Add(new MenuItem("fireBwall Trello", new EventHandler(ToTrello)));
             cm.MenuItems.Add("Links", links.ToArray());
@@ -70,7 +69,7 @@ namespace fireBwall.UI.Tabs
 
         void ToFirebwallCom(object we, EventArgs dontMatter)
         {
-            System.Diagnostics.Process.Start("http://firebwall.com");
+            System.Diagnostics.Process.Start("https://firebwall.com");
         }
 
         private void ToFacebook(object sender, EventArgs e)
@@ -85,7 +84,12 @@ namespace fireBwall.UI.Tabs
 
         private void ToModules(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://firebwall.com/modules.php");
+            System.Diagnostics.Process.Start("https://firebwall.com/modules.php");
+        }
+
+        private void ToThemes(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://firebwall.com/themes.php");
         }
 
         private void ToTwitter(object sender, EventArgs e)
@@ -105,10 +109,10 @@ namespace fireBwall.UI.Tabs
         public void AddLine(LogEvent line)
         {
             // only display if checked AND the return type is to notify
-            //if (GeneralConfiguration.Instance.ShowPopups && line.userControl != null && ((line.PMR.returnType & FM.PacketMainReturnType.Popup) == FM.PacketMainReturnType.Popup))
-            //{
-            //    popup.AddLogEvent(line);
-            //}
+            if (GeneralConfiguration.Instance.ShowPopups && line.Module.GetUserInterface() != null && ((line.PMR & fireBwall.Modules.PacketMainReturnType.Popup) == fireBwall.Modules.PacketMainReturnType.Popup))
+            {
+                popup.AddLogEvent(line);
+            }
         }
 
         /// <summary>

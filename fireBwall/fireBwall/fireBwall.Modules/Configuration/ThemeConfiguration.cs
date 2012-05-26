@@ -194,7 +194,7 @@ namespace fireBwall.Configuration
             }
         }
 
-        public void ChangeTheme(string theme)
+        public void ChangeTheme(string theme, bool force = false)
         {
             try
             {
@@ -203,8 +203,9 @@ namespace fireBwall.Configuration
                 {
                     if (schemes.ContainsKey(theme) && IsValid(schemes[theme]))
                     {
+                        bool changed = GeneralConfiguration.Instance.CurrentTheme != theme;
                         GeneralConfiguration.Instance.CurrentTheme = theme;
-                        if (ThemeChanged != null)
+                        if (ThemeChanged != null && (force || changed))
                             ThemeChanged();
                     }
                 }
@@ -225,7 +226,15 @@ namespace fireBwall.Configuration
             {
                 try
                 {
-                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    LockCookie upgrade = new LockCookie();
+                    bool upgraded = false;
+                    if (locker.IsReaderLockHeld)
+                    {
+                        upgrade = locker.UpgradeToWriterLock(new TimeSpan(0, 1, 0));
+                        upgraded = true;
+                    }
+                    else
+                        locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
                     try
                     {
                         foreach (string file in Directory.GetFiles(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))
@@ -243,7 +252,10 @@ namespace fireBwall.Configuration
                     }
                     finally
                     {
-                        locker.ReleaseWriterLock();
+                        if (upgraded)
+                            locker.DowngradeFromWriterLock(ref upgrade);
+                        else
+                            locker.ReleaseWriterLock();
                     }
                 }
                 catch (ApplicationException ex)
@@ -2193,16 +2205,26 @@ namespace fireBwall.Configuration
 
         public void AddScheme(ColorScheme scheme)
         {
+            if (!IsValid(scheme))
+                return;
             try
             {
-                locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                bool upgraded = false;
+                LockCookie upgrade = new LockCookie();
+                if (locker.IsReaderLockHeld)
+                    upgrade = locker.UpgradeToWriterLock(new TimeSpan(0, 1, 0));
+                else
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
                 try
                 {
                     schemes[scheme.Name] = scheme;
                 }
                 finally
                 {
-                    locker.ReleaseWriterLock();
+                    if (upgraded)
+                        locker.DowngradeFromWriterLock(ref upgrade);
+                    else
+                        locker.ReleaseWriterLock();
                 }
             }
             catch (ApplicationException ex)

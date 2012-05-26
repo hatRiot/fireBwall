@@ -54,6 +54,25 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.GERMAN, "Help", "Hilfe");
             multistring.SetString(Language.GERMAN, "Move Down", "Nach unten");
             multistring.SetString(Language.GERMAN, "Move Up", "Nach oben");
+
+            multistring.SetString(Language.JAPANESE, "Enable/Disable", "有効化/無効化");
+            multistring.SetString(Language.JAPANESE, "Open Configuration", "開いている構成");
+            multistring.SetString(Language.JAPANESE, "Help", "ヘルプ");
+            multistring.SetString(Language.JAPANESE, "Move Down", "下に移動します。");
+            multistring.SetString(Language.JAPANESE, "Move Up", "上に移動します。");
+
+            multistring.SetString(Language.ITALIAN, "Enable/Disable", "Attivare/disattivare");
+            multistring.SetString(Language.ITALIAN, "Open Configuration", "Configurazione aperta");
+            multistring.SetString(Language.ITALIAN, "Help", "Guida");
+            multistring.SetString(Language.ITALIAN, "Move Down", "Spostare verso il basso");
+            multistring.SetString(Language.ITALIAN, "Move Up", "Spostarsi verso l'alto");
+
+            multistring.SetString(Language.FRENCH, "Enable/Disable", "Activer/désactiver");
+            multistring.SetString(Language.FRENCH, "Open Configuration", "Configuration ouverte");
+            multistring.SetString(Language.FRENCH, "Help", "Aide");
+            multistring.SetString(Language.FRENCH, "Move Down", "Déplacer vers le bas");
+            multistring.SetString(Language.FRENCH, "Move Up", "Déplacez vers le haut");
+
             this.na = na;
             moduleOrder = na.Modules.GetModuleOrder();
             InitializeComponent();

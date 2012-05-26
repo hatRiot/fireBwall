@@ -16,7 +16,7 @@ namespace fireBwall.Configuration
         {
             NDISFilterList = new WinpkFilterList();
             NDISFilterList.OpenDriver();
-            NDISFilterList.GetAllAdapters();
+            NDISFilterList.GetAllAdapters();           
         }
 
         /// <summary>

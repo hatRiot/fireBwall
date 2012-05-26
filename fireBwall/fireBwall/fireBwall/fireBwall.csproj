@@ -32,6 +32,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\newTray.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -122,6 +126,9 @@
     <EmbeddedResource Include="UI\Tabs\ColorSchemeEditor.resx">
       <DependentUpon>ColorSchemeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Tabs\OptionsDisplay.resx">
+      <DependentUpon>OptionsDisplay.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -137,6 +144,9 @@
       <Project>{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}</Project>
       <Name>fireBwall.Modules</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\newTray.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

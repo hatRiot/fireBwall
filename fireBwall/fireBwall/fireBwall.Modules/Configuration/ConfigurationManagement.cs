@@ -55,27 +55,23 @@ namespace fireBwall.Configuration
                     {
                         if (configPath == null)
                         {
+                            LockCookie lc = new LockCookie();
                             try
                             {
-                                rwlock.ReleaseReaderLock();
-                                rwlock.AcquireWriterLock(new TimeSpan(0, 1, 0));
-                                try
+                                lc = rwlock.UpgradeToWriterLock(new TimeSpan(0, 1, 0));
+                                configPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "fireBwall";
+                                if (!Directory.Exists(configPath))
                                 {
-                                    configPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "fireBwall";
-                                    if (!Directory.Exists(configPath))
-                                    {
-                                        Directory.CreateDirectory(configPath);
-                                    }
-                                }
-                                finally
-                                {
-                                    rwlock.ReleaseWriterLock();
-                                    rwlock.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                                    Directory.CreateDirectory(configPath);
                                 }
                             }
                             catch (ApplicationException ex)
                             {
                                 LogCenter.Instance.LogException(ex);
+                            }
+                            finally
+                            {
+                                rwlock.DowngradeFromWriterLock(ref lc);
                             }
                         }
                         ret = "" + configPath;
@@ -86,7 +82,7 @@ namespace fireBwall.Configuration
                     }
                     finally
                     {
-                        rwlock.ReleaseReaderLock();
+                        rwlock.ReleaseLock();
                     }
                 }
                 catch (ApplicationException ex)
@@ -124,20 +120,16 @@ namespace fireBwall.Configuration
 
         #region Functions
 
-        public bool SaveAllConfigurations()
+        public void SaveAllConfigurations()
         {
-            if (!GeneralConfiguration.Instance.Save())
-                return false;
+            GeneralConfiguration.Instance.Save();
             ThemeConfiguration.Instance.Save();
-            return true;
         }
 
-        public bool LoadAllConfigurations()
+        public void LoadAllConfigurations()
         {
-            if (!GeneralConfiguration.Instance.Load())
-                return false;
+            GeneralConfiguration.Instance.Load();
             ThemeConfiguration.Instance.Load();
-            return true;
         }
 
         #endregion

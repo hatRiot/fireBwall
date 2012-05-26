@@ -50,6 +50,7 @@ namespace fireBwall.UI.Tabs
             t.Name = "AdapterControl Adapter Update Thread";
             t.Start();
             flowLayoutPanel1.SizeChanged += new EventHandler(flowLayoutPanel1_SizeChanged);
+            Program.OnShutdown += Kill;
         }
 
         void flowLayoutPanel1_SizeChanged(object sender, EventArgs e)
@@ -80,7 +81,7 @@ namespace fireBwall.UI.Tabs
                 {
                     foreach (AdapterDisplay ad in flowLayoutPanel1.Controls)
                     {
-                        ad.Update();
+                        ad.UpdateText();
                     }
                     foreach (INDISFilter na in ProcessingConfiguration.Instance.NDISFilterList.GetNewAdapters())
                     {

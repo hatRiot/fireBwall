@@ -12,7 +12,10 @@ namespace fireBwall.Configuration
         GERMAN,
         CHINESE,
         RUSSIAN,
-        PORTUGUESE
+        PORTUGUESE,
+        JAPANESE,
+        ITALIAN,
+        FRENCH
     }
 
     public class MultilingualStringManager
@@ -40,6 +43,15 @@ namespace fireBwall.Configuration
                     break;
                 case Language.SPANISH:
                     SetString("es", name, value);
+                    break;
+                case Language.JAPANESE:
+                    SetString("ja", name, value);
+                    break; 
+                case Language.ITALIAN:
+                    SetString("it", name, value);
+                    break;
+                case Language.FRENCH:
+                    SetString("fr", name, value);
                     break;
             }
         }

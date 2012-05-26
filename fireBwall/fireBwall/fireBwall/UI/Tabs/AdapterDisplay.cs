@@ -16,11 +16,11 @@ namespace fireBwall.UI.Tabs
     {
         public AdapterInformation ai;
 
-        public void Update()
+        public void UpdateText()
         {
             if (textBoxDetails.InvokeRequired)
             {
-                System.Threading.ThreadStart ts = new System.Threading.ThreadStart(Update);
+                System.Threading.ThreadStart ts = new System.Threading.ThreadStart(UpdateText);
                 textBoxDetails.Invoke(ts);
             }
             else
@@ -54,6 +54,19 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.SPANISH, "Enabled", "Permitir");
             multistring.SetString(Language.SPANISH, "Disabled", "Discapacitado");
             multistring.SetString(Language.SPANISH, "Configure Device", "Configurar Dispositivo");
+
+            multistring.SetString(Language.JAPANESE, "Enabled", "有効");
+            multistring.SetString(Language.JAPANESE, "Disabled", "有効ではないです。");
+            multistring.SetString(Language.JAPANESE, "Configure Device", "デバイスを構成します。");
+
+            multistring.SetString(Language.ITALIAN, "Enabled", "Abilitato");
+            multistring.SetString(Language.ITALIAN, "Disabled", "Non abilitato");
+            multistring.SetString(Language.ITALIAN, "Configure Device", "Configurare il dispositivo");
+
+            multistring.SetString(Language.FRENCH, "Enabled", "Activé");
+            multistring.SetString(Language.FRENCH, "Disabled", "Pas activé");
+            multistring.SetString(Language.FRENCH, "Configure Device", "Configurer le périphérique");
+
             if (null != ai)
             {
                 this.ai = ai;
@@ -81,6 +94,7 @@ namespace fireBwall.UI.Tabs
         private void AdapterDisplay_Load(object sender, EventArgs e)
         {
             LanguageChanged();
+            ThemeChanged();
         }
 
         public override void LanguageChanged()

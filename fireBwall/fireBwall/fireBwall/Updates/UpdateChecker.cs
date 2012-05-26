@@ -6,7 +6,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -78,7 +77,8 @@ namespace fireBwall.Updates
             {
                 WebClient client = new WebClient();
                 client.Headers[HttpRequestHeader.UserAgent] = "firebwall 0.3.12.0 Updater";
-                XmlTextReader reader = new XmlTextReader("https://www.firebwall.com/api/firebwall/" + GeneralConfiguration.Instance.PreferredLanguage + ".xml");
+                string xml = client.DownloadString("https://www.firebwall.com/api/firebwall/" + GeneralConfiguration.Instance.PreferredLanguage + ".xml?min=" + GeneralConfiguration.Instance.IntervaledUpdateMinutes.ToString());
+                XmlTextReader reader = new XmlTextReader(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
                 lock (padlock)
                 {
                     if (!reader.Read())

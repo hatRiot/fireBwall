@@ -611,7 +611,8 @@ namespace fireBwall.Configuration
                     }
                     finally
                     {
-                        locker.ReleaseReaderLock();
+                        if(locker.IsReaderLockHeld)
+                            locker.ReleaseReaderLock();
                     }
                 }
                 catch (ApplicationException ex)
@@ -624,7 +625,15 @@ namespace fireBwall.Configuration
             {
                 try
                 {
-                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    bool upgraded = false;
+                    LockCookie upgrade = new LockCookie();
+                    if (locker.IsReaderLockHeld)
+                    {
+                        upgrade = locker.UpgradeToWriterLock(new TimeSpan(0, 1, 0));
+                        upgraded = true;
+                    }
+                    else
+                        locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
                     try
                     {
                         if (configuration == null)
@@ -639,7 +648,10 @@ namespace fireBwall.Configuration
                     }
                     finally
                     {
-                        locker.ReleaseWriterLock();
+                        if (upgraded)
+                            locker.DowngradeFromWriterLock(ref upgrade);
+                        else
+                            locker.ReleaseWriterLock();
                     }
                 }
                 catch (ApplicationException ex)
@@ -671,7 +683,8 @@ namespace fireBwall.Configuration
                 }
                 finally
                 {
-                    locker.ReleaseReaderLock();
+                    if(locker.IsReaderLockHeld)
+                        locker.ReleaseReaderLock();
                 }
                 return true;
             }
@@ -686,30 +699,55 @@ namespace fireBwall.Configuration
         {
             try
             {
-                locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                LockCookie upgrade = new LockCookie();
+                bool upgraded = false;
+                if (locker.IsReaderLockHeld)
+                {
+                    upgrade = locker.UpgradeToWriterLock(new TimeSpan(0, 1, 0));
+                    upgraded = true;
+                }
+                else
+                    locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
                 try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(GeneralConfig));
-                    TextReader reader = new StreamReader(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "general.cfg");
-                    configuration = (GeneralConfig)serializer.Deserialize(reader);
-                    reader.Close();
-                }
-                catch
-                {
-                    configuration = new GeneralConfig();
+                    try
+                    {
+                        if (File.Exists(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "general.cfg"))
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(GeneralConfig));
+                            TextReader reader = new StreamReader(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "general.cfg");
+                            configuration = (GeneralConfig)serializer.Deserialize(reader);
+                            reader.Close();
+                        }
+                        else
+                        {
+                            configuration = new GeneralConfig();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                        configuration = new GeneralConfig();
+                    }
+                    finally
+                    {
+                        if (configuration.PreferredLanguage == null)
+                        {
+                            configuration.PreferredLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+                        }
+                        if (configuration.CurrentTheme == null)
+                        {
+                            ThemeConfiguration.Instance.CreateDefaultThemes();
+                            configuration.CurrentTheme = "Light";
+                        }
+                    }
                 }
                 finally
                 {
-                    locker.ReleaseWriterLock();
-                }
-                if (configuration.PreferredLanguage == null)
-                {
-                    configuration.PreferredLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-                }
-                if (configuration.CurrentTheme == null)
-                {
-                    ThemeConfiguration.Instance.CreateDefaultThemes();
-                    configuration.CurrentTheme = "Light";
+                    if (upgraded)
+                        locker.DowngradeFromWriterLock(ref upgrade);
+                    else
+                        locker.ReleaseWriterLock();
                 }
                 return true;
             }

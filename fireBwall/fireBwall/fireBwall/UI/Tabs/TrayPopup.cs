@@ -89,18 +89,18 @@ namespace fireBwall.UI.Tabs
             if (listBox1.SelectedItem != null)
             {
                 LogEvent le = (LogEvent)listBox1.SelectedItem;
-                if (le.userControl != null)
+                if (le.Module != null)
                 {
-                    if (le.userControl != null)
+                    if (le.Module.GetUserInterface() != null)
                     {
                         try
                         {
-                            DynamicUserControl uc = le.userControl;
+                            DynamicUserControl uc = le.Module.GetUserInterface();
                             if (uc != null)
                             {
                                 DynamicForm f = new DynamicForm();
                                 f.Size = new System.Drawing.Size(640, 480);
-                                f.Text = le.userControl.Name;
+                                f.Text = le.Module.Adapter.GetAdapterInformation().Name + " - " + le.Module.MetaData.GetMeta().Name + " " + le.Module.MetaData.GetMeta().Version;
                                 f.Controls.Add(uc);
                                 f.Show();
                                 f.ThemeChanged();

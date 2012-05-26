@@ -47,11 +47,11 @@ namespace fireBwall.UI.Tabs
 			private void MainWindow_Load(object sender, EventArgs e) 
             {
                 Program.trayIcon = new TrayIcon();
-                Program.OnShutdown += Program.trayIcon.Dispose;
-                Program.OnShutdown += Program.updater.Close;
+                Program.OnShutdown += Program.trayIcon.Dispose;                
                 Program.OnShutdown += LogCenter.Instance.Kill;
                 Program.updater = new Updates.UpdateChecker();
                 Program.updater.Updater();
+                Program.OnShutdown += Program.updater.Close;
                 // call the log purger
                 LogCenter.Instance.CleanLogs();
 
@@ -101,6 +101,21 @@ namespace fireBwall.UI.Tabs
                 multistring.SetString(Language.PORTUGUESE, "Options", "Opções");
                 multistring.SetString(Language.PORTUGUESE, "Adapters", "Adaptadores");
                 multistring.SetString(Language.PORTUGUESE, "Help", "Ajudar");
+
+                multistring.SetString(Language.JAPANESE, "Log", "ログ");
+                multistring.SetString(Language.JAPANESE, "Options", "オプション");
+                multistring.SetString(Language.JAPANESE, "Adapters", "アダプター");
+                multistring.SetString(Language.JAPANESE, "Help", "ヘルプ");
+
+                multistring.SetString(Language.ITALIAN, "Log", "Registro");
+                multistring.SetString(Language.ITALIAN, "Options", "Opzioni");
+                multistring.SetString(Language.ITALIAN, "Adapters", "Adattatori");
+                multistring.SetString(Language.ITALIAN, "Help", "Guida");
+
+                multistring.SetString(Language.FRENCH, "Log", "Journal");
+                multistring.SetString(Language.FRENCH, "Options", "Options");
+                multistring.SetString(Language.FRENCH, "Adapters", "Adaptateurs");
+                multistring.SetString(Language.FRENCH, "Help", "Aide");
 
                 MainWindow_Resize(null, null);
                 if (GeneralConfiguration.Instance.StartMinimized)
