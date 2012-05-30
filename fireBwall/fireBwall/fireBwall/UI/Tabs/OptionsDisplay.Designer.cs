@@ -63,8 +63,7 @@
             this.displayTrayLogs.Size = new System.Drawing.Size(123, 17);
             this.displayTrayLogs.TabIndex = 0;
             this.displayTrayLogs.Text = "Display Icon Popups";
-            this.displayTrayLogs.UseVisualStyleBackColor = true;
-            this.displayTrayLogs.CheckedChanged += new System.EventHandler(this.displayTrayLogs_CheckedChanged);
+            this.displayTrayLogs.UseVisualStyleBackColor = true;            
             // 
             // languageBox
             // 
@@ -87,7 +86,7 @@
             this.languageBox.Name = "languageBox";
             this.languageBox.Size = new System.Drawing.Size(204, 21);
             this.languageBox.TabIndex = 1;
-            this.languageBox.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            
             // 
             // languageLabel
             // 
@@ -137,7 +136,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(204, 20);
             this.textBox1.TabIndex = 2;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            
             // 
             // checkBox2
             // 
@@ -148,7 +147,7 @@
             this.checkBox2.TabIndex = 1;
             this.checkBox2.Text = "Intervaled Checks";
             this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            
             // 
             // checkBox1
             // 
@@ -159,7 +158,7 @@
             this.checkBox1.TabIndex = 0;
             this.checkBox1.Text = "Check on Start Up";
             this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            
             // 
             // checkBoxStartMinimized
             // 
@@ -172,7 +171,7 @@
             this.checkBoxStartMinimized.TabIndex = 9;
             this.checkBoxStartMinimized.Text = "Start Minimized";
             this.checkBoxStartMinimized.UseVisualStyleBackColor = true;
-            this.checkBoxStartMinimized.CheckedChanged += new System.EventHandler(this.checkBoxStartMinimized_CheckedChanged);
+            
             // 
             // label1
             // 
@@ -191,7 +190,7 @@
             this.themeBox.Name = "themeBox";
             this.themeBox.Size = new System.Drawing.Size(121, 21);
             this.themeBox.TabIndex = 11;
-            this.themeBox.SelectedIndexChanged += new System.EventHandler(this.themeBox_SelectedIndexChanged);
+            
             // 
             // button1
             // 
@@ -209,7 +208,7 @@
             this.maxLogsBox.Name = "maxLogsBox";
             this.maxLogsBox.Size = new System.Drawing.Size(204, 20);
             this.maxLogsBox.TabIndex = 13;
-            this.maxLogsBox.TextChanged += new System.EventHandler(this.maxLogsBox_TextChanged);
+            
             // 
             // label5
             // 
@@ -235,7 +234,7 @@
             this.maxPcapBox.Name = "maxPcapBox";
             this.maxPcapBox.Size = new System.Drawing.Size(204, 20);
             this.maxPcapBox.TabIndex = 10;
-            this.maxPcapBox.TextChanged += new System.EventHandler(this.maxPcapBox_TextChanged);
+            
             // 
             // groupBox2
             // 
@@ -268,7 +267,7 @@
             this.checkBox3.TabIndex = 14;
             this.checkBox3.Text = "checkBox3";
             this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            
             // 
             // tableLayoutPanel1
             // 

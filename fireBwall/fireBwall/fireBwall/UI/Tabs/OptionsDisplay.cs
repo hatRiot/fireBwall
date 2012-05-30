@@ -249,6 +249,17 @@ namespace fireBwall.UI.Tabs
 
             maxLogsBox.Text = Convert.ToString(GeneralConfiguration.Instance.MaxLogs);
             maxPcapBox.Text = Convert.ToString(GeneralConfiguration.Instance.MaxPcapLogs);
+
+            this.displayTrayLogs.CheckedChanged += new System.EventHandler(this.displayTrayLogs_CheckedChanged);
+            this.languageBox.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBoxStartMinimized.CheckedChanged += new System.EventHandler(this.checkBoxStartMinimized_CheckedChanged);
+            this.themeBox.SelectedIndexChanged += new System.EventHandler(this.themeBox_SelectedIndexChanged);
+            this.maxLogsBox.TextChanged += new System.EventHandler(this.maxLogsBox_TextChanged);
+            this.maxPcapBox.TextChanged += new System.EventHandler(this.maxPcapBox_TextChanged);
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
         }
 
         public override void LanguageChanged()
