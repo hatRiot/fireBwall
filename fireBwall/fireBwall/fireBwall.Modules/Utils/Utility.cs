@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace fireBwall.Modules.Utils
+namespace fireBwall.Utils
 {
     public class Utility
     {

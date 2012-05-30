@@ -9,6 +9,7 @@ using fireBwall.Filters.NDIS;
 using fireBwall.Configuration;
 using fireBwall.Logging;
 using System.Reflection;
+using fireBwall.Utils;
 
 namespace fireBwall.Modules
 {
@@ -17,7 +18,13 @@ namespace fireBwall.Modules
         [Serializable]
         public class ModuleOrder
         {
-            public KeyValuePair<bool, string>[] Order = new KeyValuePair<bool, string>[0];
+            [Serializable]
+            public class ModulePair
+            {
+                public bool Enabled = false;
+                public string Name = "";
+            }
+            public ModulePair[] Order = new ModulePair[0];
         }
 
         List<int> ProcessingIndex = new List<int>();
@@ -40,7 +47,12 @@ namespace fireBwall.Modules
                 Directory.CreateDirectory(folder);
             string file = folder + Path.DirectorySeparatorChar + "modules.cfg";
 
-            ModuleOrder mo = new ModuleOrder() { Order = moduleOrder.ToArray() };
+            List<ModuleOrder.ModulePair> pairs = new List<ModuleOrder.ModulePair>();
+            foreach(KeyValuePair<bool, string> p in moduleOrder)
+            {
+                pairs.Add(new ModuleOrder.ModulePair() { Enabled = p.Key, Name = p.Value });
+            }
+            ModuleOrder mo = new ModuleOrder() { Order = pairs.ToArray() };
 
             try
             {
@@ -77,7 +89,11 @@ namespace fireBwall.Modules
                 TextReader reader = new StreamReader(file);
                 ModuleOrder mo = (ModuleOrder)serializer.Deserialize(reader);
                 reader.Close();
-                moduleOrder = new List<KeyValuePair<bool,string>>(mo.Order);
+                moduleOrder = new List<KeyValuePair<bool,string>>();
+                foreach (ModuleOrder.ModulePair p in mo.Order)
+                {
+                    moduleOrder.Add(new KeyValuePair<bool, string>(p.Enabled, p.Name));
+                }
             }
             catch (Exception e)
             {
@@ -218,7 +234,7 @@ namespace fireBwall.Modules
                 for (int i = 0; i < Count; i++)
                 {
                     NDISModule fm = GetModule(i);
-                    moduleOrder.Add(new KeyValuePair<bool, string>(false, fm.MetaData.GetMeta().Name));
+                    moduleOrder.Add(new KeyValuePair<bool, string>(enabled[GetModuleIndex(fm.MetaData.GetMeta().Name)], fm.MetaData.GetMeta().Name));
                 }
                 SaveModuleOrder();
             }

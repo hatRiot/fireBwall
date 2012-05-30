@@ -140,7 +140,14 @@ namespace fireBwall.UI.Tabs
             try
             {
                 int temp = checkedListBoxModules.SelectedIndex;
-                moduleOrder[checkedListBoxModules.SelectedIndex] = new KeyValuePair<bool, string>(!moduleOrder[checkedListBoxModules.SelectedIndex].Key, moduleOrder[checkedListBoxModules.SelectedIndex].Value);
+                if (moduleOrder[checkedListBoxModules.SelectedIndex].Key)
+                {
+                    moduleOrder[checkedListBoxModules.SelectedIndex] = new KeyValuePair<bool, string>(false, moduleOrder[checkedListBoxModules.SelectedIndex].Value);
+                }
+                else
+                {
+                    moduleOrder[checkedListBoxModules.SelectedIndex] = new KeyValuePair<bool, string>(true, moduleOrder[checkedListBoxModules.SelectedIndex].Value);
+                }                
                 na.Modules.UpdateModuleOrder(moduleOrder);
                 moduleOrder = na.Modules.GetModuleOrder();
                 UpdateView();

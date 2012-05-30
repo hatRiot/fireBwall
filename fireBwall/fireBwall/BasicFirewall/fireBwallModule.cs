@@ -5,10 +5,10 @@ using fireBwall.Modules;
 using fireBwall.Packets;
 using fireBwall.Logging;
 using fireBwall.Utils;
-using fireBwall.Modules.Utils;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace BasicFirewall
@@ -235,6 +235,7 @@ namespace BasicFirewall
                 else
                 {
                     rules = new List<Rule>();
+                    XmlSerializer deserializer = new XmlSerializer(typeof(RuleSet));
                     rules.AddRange(temp.Rules);
                 }
             }
@@ -247,7 +248,9 @@ namespace BasicFirewall
             {
                 if (rules != null)
                 {
-                    Save<RuleSet>(new RuleSet() { Rules = rules.ToArray() });
+                    RuleSet rs = new RuleSet();
+                    rs.Rules = rules.ToArray();
+                    Save<RuleSet>(rs);
                 }
             }
             return true;
@@ -313,12 +316,62 @@ namespace BasicFirewall
     }
 
     [Serializable]
-    public class RuleSet
+    public class RuleSet : IXmlSerializable
     {
         [XmlArray("Rules")]
         public Rule[] Rules = new Rule[0];
 
         public RuleSet() { }
+
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            List<Rule> rules = new List<Rule>();
+            reader.ReadStartElement("RuleSet");
+            reader.ReadStartElement("Rules");
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("Rule");
+                XmlSerializer serializer;
+                switch (reader.Name)
+                {
+                    case "tcpallrule":
+                        serializer = new XmlSerializer(typeof(TCPAllRule));
+                        rules.Add((TCPAllRule)serializer.Deserialize(reader));
+                        break;
+                    case "tcpportrule":
+                        serializer = new XmlSerializer(typeof(TCPPortRule));
+                        rules.Add((TCPPortRule)serializer.Deserialize(reader));
+                        break;
+                }
+                
+                reader.ReadEndElement();
+
+                Rules = rules.ToArray();
+
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
+            reader.ReadEndElement();
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Rules");
+            foreach (Rule r in Rules)
+            {
+                writer.WriteStartElement("Rule");
+
+                XmlSerializer serializer = new XmlSerializer(r.GetType());
+                serializer.Serialize(writer, r);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+        }
     }
 
     [Serializable]
@@ -343,7 +396,7 @@ namespace BasicFirewall
     [XmlInclude(typeof(TCPPortRule))]
     [XmlInclude(typeof(UDPAllRule))]
     [XmlInclude(typeof(UDPPortRule))]
-    public class Rule
+    public class Rule : IXmlSerializable
     {
         public PacketStatus ps = PacketStatus.UNDETERMINED;
         public Direction direction = Direction.IN;
@@ -359,6 +412,22 @@ namespace BasicFirewall
         public virtual bool Notify()
         {
             return false;
+        }
+
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+
+        public void ReadXml(XmlReader reader)
+        {
+            
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            
         }
     }
 
@@ -399,7 +468,8 @@ namespace BasicFirewall
     #region Rules
 
     [Serializable]
-    public class TCPAllRule : Rule
+    [XmlRoot("tcpallrule")]
+    public class TCPAllRule : Rule, IXmlSerializable
     {
         public bool log = true;
         public bool notify = true;
@@ -491,34 +561,130 @@ namespace BasicFirewall
         {
             return notify;
         }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+
+            writer.WriteStartElement("log");
+            logSerializer.Serialize(writer, log);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("notify");
+            notifySerializer.Serialize(writer, notify);
+            writer.WriteEndElement();
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+
+            reader.ReadStartElement("tcpallrule");
+            
+            reader.ReadStartElement("log");
+            log = (bool)logSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("notify");
+            notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadEndElement();
+        }
     }
 
     [Serializable]
-    public class TCPPortRule : Rule
+    [XmlRoot("tcpportrule")]
+    public class TCPPortRule : Rule, IXmlSerializable
     {
         public List<int> port = new List<int>();
         public bool log = true;
         public bool notify = true;
 
-        [XmlIgnore()]
-        List<PortRange> in_port_ranges = null;
-        PortRange[] prs = new PortRange[0];
+        public void WriteXml(XmlWriter writer)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer intSerializer = new XmlSerializer(typeof(int));
+            XmlSerializer prSerializer = new XmlSerializer(typeof(PortRange));
+
+            writer.WriteStartElement("log");
+            logSerializer.Serialize(writer, log);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("notify");
+            notifySerializer.Serialize(writer, notify);
+            writer.WriteEndElement();            
+
+            writer.WriteStartElement("ports");
+            foreach (int p in port)
+            {
+                writer.WriteStartElement("port");
+                intSerializer.Serialize(writer, p);
+                writer.WriteEndElement(); 
+            }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("portranges");
+            foreach (PortRange p in port_ranges)
+            {
+                writer.WriteStartElement("portrange");
+                prSerializer.Serialize(writer, p);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer intSerializer = new XmlSerializer(typeof(int));
+            XmlSerializer prSerializer = new XmlSerializer(typeof(PortRange));
+
+            port_ranges = new List<PortRange>();
+            port = new List<int>();
+
+            reader.ReadStartElement("tcpportrule");
+
+            reader.ReadStartElement("log");
+            log = (bool)logSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("notify");
+            notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("ports");
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("port");
+                port.Add((int)intSerializer.Deserialize(reader));
+                reader.ReadEndElement();
+
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("portranges");
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("portrange");
+                port_ranges.Add((PortRange)prSerializer.Deserialize(reader));
+                reader.ReadEndElement();
+
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
+
+            reader.ReadEndElement();
+        }
 
         public List<PortRange> port_ranges
         {
-            get
-            {
-                if (in_port_ranges == null)
-                {
-                    in_port_ranges = new List<PortRange>(prs);
-                }
-                return in_port_ranges;
-            }
-            set
-            {
-                in_port_ranges = value;
-                prs = in_port_ranges.ToArray();
-            }
+            get; set;
         }
 
         public override string ToString()
@@ -656,6 +822,7 @@ namespace BasicFirewall
     }
 
     [Serializable]
+    [XmlRoot("TCPIPPortRule")]
     public class TCPIPPortRule : Rule
     {
         public int port = -1;
@@ -761,6 +928,7 @@ namespace BasicFirewall
     }
 
     [Serializable]
+    [XmlRoot("UDPPortRule")]
     public class UDPPortRule : Rule
     {
         public List<int> port = new List<int>();
@@ -921,6 +1089,7 @@ namespace BasicFirewall
     }
 
     [Serializable]
+    [XmlRoot("UDPAllRule")]
     public class UDPAllRule : Rule
     {
         public bool log = true;
@@ -1011,6 +1180,7 @@ namespace BasicFirewall
     }
 
     [Serializable]
+    [XmlRoot("AllRule")]
     public class AllRule : Rule
     {
         public bool log = true;
@@ -1094,6 +1264,7 @@ namespace BasicFirewall
     }
 
     [Serializable]
+    [XmlRoot("IPRule")]
     public class IPRule : Rule
     {
         public bool log = true;
