@@ -347,6 +347,26 @@ namespace BasicFirewall
                         serializer = new XmlSerializer(typeof(TCPPortRule));
                         rules.Add((TCPPortRule)serializer.Deserialize(reader));
                         break;
+                    case "tcpipportrule":
+                        serializer = new XmlSerializer(typeof(TCPIPPortRule));
+                        rules.Add((TCPIPPortRule)serializer.Deserialize(reader));
+                        break;
+                    case "udpportrule":
+                        serializer = new XmlSerializer(typeof(UDPPortRule));
+                        rules.Add((UDPPortRule)serializer.Deserialize(reader));
+                        break;
+                    case "allrule":
+                        serializer = new XmlSerializer(typeof(AllRule));
+                        rules.Add((AllRule)serializer.Deserialize(reader));
+                        break;
+                    case "iprule":
+                        serializer = new XmlSerializer(typeof(IPRule));
+                        rules.Add((IPRule)serializer.Deserialize(reader));
+                        break;
+                    case "udpallrule":
+                        serializer = new XmlSerializer(typeof(UDPAllRule));
+                        rules.Add((UDPAllRule)serializer.Deserialize(reader));
+                        break;
                 }
                 
                 reader.ReadEndElement();
@@ -420,12 +440,12 @@ namespace BasicFirewall
         }
 
 
-        public void ReadXml(XmlReader reader)
+        public virtual void ReadXml(XmlReader reader)
         {
             
         }
 
-        public void WriteXml(XmlWriter writer)
+        public virtual void WriteXml(XmlWriter writer)
         {
             
         }
@@ -469,7 +489,7 @@ namespace BasicFirewall
 
     [Serializable]
     [XmlRoot("tcpallrule")]
-    public class TCPAllRule : Rule, IXmlSerializable
+    public class TCPAllRule : Rule
     {
         public bool log = true;
         public bool notify = true;
@@ -562,10 +582,10 @@ namespace BasicFirewall
             return notify;
         }
 
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
-            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));            
 
             writer.WriteStartElement("log");
             logSerializer.Serialize(writer, log);
@@ -574,9 +594,19 @@ namespace BasicFirewall
             writer.WriteStartElement("notify");
             notifySerializer.Serialize(writer, notify);
             writer.WriteEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            writer.WriteStartElement("direction");
+            dirSerializer.Serialize(writer, direction);
+            writer.WriteEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            writer.WriteStartElement("status");
+            statusSerializer.Serialize(writer, ps);
+            writer.WriteEndElement();
         }
 
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
             XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
@@ -591,19 +621,29 @@ namespace BasicFirewall
             notify = (bool)notifySerializer.Deserialize(reader);
             reader.ReadEndElement();
 
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            reader.ReadStartElement("direction");
+            direction = (Direction)dirSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            reader.ReadStartElement("status");
+            ps = (PacketStatus)statusSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
             reader.ReadEndElement();
         }
     }
 
     [Serializable]
     [XmlRoot("tcpportrule")]
-    public class TCPPortRule : Rule, IXmlSerializable
+    public class TCPPortRule : Rule
     {
         public List<int> port = new List<int>();
         public bool log = true;
         public bool notify = true;
 
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
             XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
@@ -616,7 +656,17 @@ namespace BasicFirewall
 
             writer.WriteStartElement("notify");
             notifySerializer.Serialize(writer, notify);
-            writer.WriteEndElement();            
+            writer.WriteEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            writer.WriteStartElement("direction");
+            dirSerializer.Serialize(writer, direction);
+            writer.WriteEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            writer.WriteStartElement("status");
+            statusSerializer.Serialize(writer, ps);
+            writer.WriteEndElement();
 
             writer.WriteStartElement("ports");
             foreach (int p in port)
@@ -637,7 +687,7 @@ namespace BasicFirewall
             writer.WriteEndElement();
         }
 
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
             XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
@@ -655,6 +705,16 @@ namespace BasicFirewall
 
             reader.ReadStartElement("notify");
             notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            reader.ReadStartElement("direction");
+            direction = (Direction)dirSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            reader.ReadStartElement("status");
+            ps = (PacketStatus)statusSerializer.Deserialize(reader);
             reader.ReadEndElement();
 
             reader.ReadStartElement("ports");
@@ -822,13 +882,85 @@ namespace BasicFirewall
     }
 
     [Serializable]
-    [XmlRoot("TCPIPPortRule")]
+    [XmlRoot("tcpipportrule")]
     public class TCPIPPortRule : Rule
     {
         public int port = -1;
         public byte[] ip = new byte[0];
         public bool log = true;
         public bool notify = true;
+
+        public override void ReadXml(XmlReader reader)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer intSerializer = new XmlSerializer(typeof(int));
+            XmlSerializer byteSerializer = new XmlSerializer(typeof(string));
+
+            reader.ReadStartElement("tcpipportrule");
+
+            reader.ReadStartElement("log");
+            log = (bool)logSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("notify");
+            notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            reader.ReadStartElement("direction");
+            direction = (Direction)dirSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            reader.ReadStartElement("status");
+            ps = (PacketStatus)statusSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("port");
+            port = ((int)intSerializer.Deserialize(reader));
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("ip");
+            ip = Convert.FromBase64String(((string)byteSerializer.Deserialize(reader)));
+            reader.ReadEndElement();
+
+            reader.ReadEndElement();
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer intSerializer = new XmlSerializer(typeof(int));
+            XmlSerializer byteSerializer = new XmlSerializer(typeof(string));
+
+            writer.WriteStartElement("log");
+            logSerializer.Serialize(writer, log);
+            writer.WriteEndElement();  
+
+            writer.WriteStartElement("notify");
+            notifySerializer.Serialize(writer, notify);
+            writer.WriteEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            writer.WriteStartElement("direction");
+            dirSerializer.Serialize(writer, direction);
+            writer.WriteEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            writer.WriteStartElement("status");
+            statusSerializer.Serialize(writer, ps);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("port");
+            intSerializer.Serialize(writer, port);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("ip");
+            byteSerializer.Serialize(writer, Convert.ToBase64String(ip));
+            writer.WriteEndElement();  
+        }
 
         public override string ToString()
         {
@@ -928,32 +1060,116 @@ namespace BasicFirewall
     }
 
     [Serializable]
-    [XmlRoot("UDPPortRule")]
+    [XmlRoot("udpportrule")]
     public class UDPPortRule : Rule
     {
         public List<int> port = new List<int>();
         public bool log = true;
         public bool notify = true;
 
-        [NonSerialized]
-        List<PortRange> in_port_ranges = null;
-        PortRange[] prs = new PortRange[0];
+        public override void ReadXml(XmlReader reader)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer intSerializer = new XmlSerializer(typeof(int));
+            XmlSerializer prSerializer = new XmlSerializer(typeof(PortRange));
+
+            port_ranges = new List<PortRange>();
+            port = new List<int>();
+
+            reader.ReadStartElement("udpportrule");
+
+            reader.ReadStartElement("log");
+            log = (bool)logSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("notify");
+            notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            reader.ReadStartElement("direction");
+            direction = (Direction)dirSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            reader.ReadStartElement("status");
+            ps = (PacketStatus)statusSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("ports");
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("port");
+                port.Add((int)intSerializer.Deserialize(reader));
+                reader.ReadEndElement();
+
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("portranges");
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("portrange");
+                port_ranges.Add((PortRange)prSerializer.Deserialize(reader));
+                reader.ReadEndElement();
+
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
+
+            reader.ReadEndElement();
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer intSerializer = new XmlSerializer(typeof(int));
+            XmlSerializer prSerializer = new XmlSerializer(typeof(PortRange));
+
+            writer.WriteStartElement("log");
+            logSerializer.Serialize(writer, log);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("notify");
+            notifySerializer.Serialize(writer, notify);
+            writer.WriteEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            writer.WriteStartElement("direction");
+            dirSerializer.Serialize(writer, direction);
+            writer.WriteEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            writer.WriteStartElement("status");
+            statusSerializer.Serialize(writer, ps);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("ports");
+            foreach (int p in port)
+            {
+                writer.WriteStartElement("port");
+                intSerializer.Serialize(writer, p);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("portranges");
+            foreach (PortRange p in port_ranges)
+            {
+                writer.WriteStartElement("portrange");
+                prSerializer.Serialize(writer, p);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+        }
 
         public List<PortRange> port_ranges
         {
-            get
-            {
-                if (in_port_ranges == null)
-                {
-                    in_port_ranges = new List<PortRange>(prs);
-                }
-                return in_port_ranges;
-            }
-            set
-            {
-                in_port_ranges = value;
-                prs = in_port_ranges.ToArray();
-            }
+            get;
+            set;
         }
 
         public override string ToString()
@@ -1089,11 +1305,63 @@ namespace BasicFirewall
     }
 
     [Serializable]
-    [XmlRoot("UDPAllRule")]
+    [XmlRoot("udpallrule")]
     public class UDPAllRule : Rule
     {
         public bool log = true;
         public bool notify = true;
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+
+            writer.WriteStartElement("log");
+            logSerializer.Serialize(writer, log);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("notify");
+            notifySerializer.Serialize(writer, notify);
+            writer.WriteEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            writer.WriteStartElement("direction");
+            dirSerializer.Serialize(writer, direction);
+            writer.WriteEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            writer.WriteStartElement("status");
+            statusSerializer.Serialize(writer, ps);
+            writer.WriteEndElement();
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            
+            reader.ReadStartElement("udpallrule");
+
+            reader.ReadStartElement("log");
+            log = (bool)logSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("notify");
+            notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            reader.ReadStartElement("direction");
+            direction = (Direction)dirSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            reader.ReadStartElement("status");
+            ps = (PacketStatus)statusSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadEndElement();
+        }
 
         public UDPAllRule() { }
 
@@ -1180,11 +1448,63 @@ namespace BasicFirewall
     }
 
     [Serializable]
-    [XmlRoot("AllRule")]
+    [XmlRoot("allrule")]
     public class AllRule : Rule
     {
         public bool log = true;
         public bool notify = true;
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+
+            writer.WriteStartElement("log");
+            logSerializer.Serialize(writer, log);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("notify");
+            notifySerializer.Serialize(writer, notify);
+            writer.WriteEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            writer.WriteStartElement("direction");
+            dirSerializer.Serialize(writer, direction);
+            writer.WriteEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            writer.WriteStartElement("status");
+            statusSerializer.Serialize(writer, ps);
+            writer.WriteEndElement();
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+
+            reader.ReadStartElement("allrule");
+
+            reader.ReadStartElement("log");
+            log = (bool)logSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("notify");
+            notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            reader.ReadStartElement("direction");
+            direction = (Direction)dirSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            reader.ReadStartElement("status");
+            ps = (PacketStatus)statusSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadEndElement();
+        }
 
         public AllRule() { }
 
@@ -1264,24 +1584,91 @@ namespace BasicFirewall
     }
 
     [Serializable]
-    [XmlRoot("IPRule")]
+    [XmlRoot("iprule")]
     public class IPRule : Rule
     {
         public bool log = true;
         public bool notify = true;
-        public byte[][] fips = new byte[0][];
+
+        public override void ReadXml(XmlReader reader)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+
+            reader.ReadStartElement("iprule");
+
+            reader.ReadStartElement("log");
+            log = (bool)logSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            reader.ReadStartElement("notify");
+            notify = (bool)notifySerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            reader.ReadStartElement("direction");
+            direction = (Direction)dirSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            reader.ReadStartElement("status");
+            ps = (PacketStatus)statusSerializer.Deserialize(reader);
+            reader.ReadEndElement();
+
+            ips = new List<byte[]>();
+            XmlSerializer byteSerializer = new XmlSerializer(typeof(string));
+            reader.ReadStartElement("ips");
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("ip");
+                ips.Add(Convert.FromBase64String(((string)byteSerializer.Deserialize(reader))));
+                reader.ReadEndElement();
+
+                reader.MoveToContent();
+            }
+
+            reader.ReadEndElement();
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            XmlSerializer logSerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer notifySerializer = new XmlSerializer(typeof(bool));
+            XmlSerializer intSerializer = new XmlSerializer(typeof(string));
+
+            writer.WriteStartElement("log");
+            logSerializer.Serialize(writer, log);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("notify");
+            notifySerializer.Serialize(writer, notify);
+            writer.WriteEndElement();
+
+            XmlSerializer dirSerializer = new XmlSerializer(typeof(Direction));
+            writer.WriteStartElement("direction");
+            dirSerializer.Serialize(writer, direction);
+            writer.WriteEndElement();
+
+            XmlSerializer statusSerializer = new XmlSerializer(typeof(PacketStatus));
+            writer.WriteStartElement("status");
+            statusSerializer.Serialize(writer, ps);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("ips");
+            foreach (byte[] p in ips)
+            {
+                writer.WriteStartElement("ip");
+                intSerializer.Serialize(writer, Convert.ToBase64String(p));
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+        }
 
         [XmlIgnore()]
         public List<byte[]> ips
         {
-            get
-            {
-                return new List<byte[]>(fips);
-            }
-            set
-            {
-                fips = value.ToArray();
-            }
+            get;
+            set;
         }
 
         [XmlIgnore()]
@@ -1301,7 +1688,7 @@ namespace BasicFirewall
         private bool Contains(IPAddress ip)
         {
             byte[] bip = ip.GetAddressBytes();
-            foreach (byte[] arr in fips)
+            foreach (byte[] arr in ips)
             {
                 if (Utility.ByteArrayEq(arr, bip))
                     return true;
