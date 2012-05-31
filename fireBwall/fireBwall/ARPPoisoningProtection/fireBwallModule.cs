@@ -76,7 +76,7 @@ namespace ARPPoisoningProtection
         [Serializable]
         public class ArpData
         {
-            public SerializableDictionary<Int32, byte[]> arpCache = new SerializableDictionary<Int32, byte[]>();
+            public SerializableDictionary<IPAddr, byte[]> arpCache = new SerializableDictionary<IPAddr, byte[]>();
             public bool Save = true;
             public bool LogUnsolic = true;
             public bool LogAttacks = true;
@@ -85,24 +85,24 @@ namespace ARPPoisoningProtection
 
         public ArpData data;
         MultilingualStringManager multistring = new MultilingualStringManager();
-        List<int> requestedIPs = new List<int>();
+        List<IPAddr> requestedIPs = new List<IPAddr>();
         object padlock = new object();
 
         public event System.Threading.ThreadStart UpdatedArpCache;
 
-        public SerializableDictionary<Int32, byte[]> GetCache()
+        public SerializableDictionary<IPAddr, byte[]> GetCache()
         {
             lock (padlock)
             {
-                return new SerializableDictionary<Int32, byte[]>(data.arpCache);
+                return new SerializableDictionary<IPAddr, byte[]>(data.arpCache);
             }
         }
 
-        public void UpdateCache(SerializableDictionary<Int32, byte[]> cache)
+        public void UpdateCache(SerializableDictionary<IPAddr, byte[]> cache)
         {
             lock (padlock)
             {
-                data.arpCache = new SerializableDictionary<Int32, byte[]>(cache);
+                data.arpCache = new SerializableDictionary<IPAddr, byte[]>(cache);
             }
         }
 
@@ -128,31 +128,11 @@ namespace ARPPoisoningProtection
                 ArpData d = data;
                 if (!d.Save)
                 {
-                    d.arpCache = new SerializableDictionary<Int32, byte[]>();
+                    d.arpCache = new SerializableDictionary<IPAddr, byte[]>();
                 }
                 Save<ArpData>(d);
             }
             return true;
-        }
-
-        public static Int32 BytesToInt32(byte[] bytes)
-        {
-            Int32 ret = 0;
-            for (int i = 0; i <= 3; i++)
-            {
-                ret += (bytes[i] << (i * 8));
-            }
-            return ret;
-        }
-
-        public static byte[] Int32ToBytes(Int32 num)
-        {
-            byte[] ret = new byte[4];
-            for (int i = 0; i <= 3; i++)
-            {
-                ret[i] = (byte)((num >> (i * 8)) & 0x000000FF);
-            }
-            return ret;
         }
 
         public override PacketMainReturnType interiorMain(ref Packet in_packet)
@@ -162,22 +142,22 @@ namespace ARPPoisoningProtection
                 ARPPacket arpp = (ARPPacket)in_packet;
                 if (arpp.isRequest && arpp.Outbound)
                 {
-                    int ip = arpp.ATargetIP.GetHashCode();
+                    IPAddr ip = new IPAddr(arpp.ATargetIP.GetAddressBytes());
                     if (!requestedIPs.Contains(ip))
                         requestedIPs.Add(ip);
                 }
                 else if (!arpp.Outbound)
                 {
-                    int ip = arpp.ASenderIP.GetHashCode();
+                    IPAddr ip = new IPAddr(arpp.ASenderIP.GetAddressBytes());
                     if (!arpp.isRequest)
                     {
                         if (requestedIPs.Contains(ip))
                         {
                             lock (padlock)
                             {
-                                if (data.arpCache.ContainsKey(BytesToInt32(arpp.ASenderIP.GetAddressBytes())))
+                                if (data.arpCache.ContainsKey(new IPAddr(arpp.ASenderIP.GetAddressBytes())))
                                 {
-                                    if (!Utility.ByteArrayEq(data.arpCache[BytesToInt32(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
+                                    if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
                                     {
                                         PacketMainReturnType pmr = 0;
                                         if (data.RectifyAttacks)
@@ -193,7 +173,7 @@ namespace ARPPoisoningProtection
                                         if (data.RectifyAttacks)
                                         {
                                             arpp.ATargetIP = arpp.ASenderIP;
-                                            arpp.ATargetMac = data.arpCache[BytesToInt32(arpp.ATargetIP.GetAddressBytes())];
+                                            arpp.ATargetMac = data.arpCache[new IPAddr(arpp.ATargetIP.GetAddressBytes())];
                                             arpp.ASenderMac = this.Adapter.GetAdapterInformation().InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
                                             arpp.FromMac = arpp.ASenderMac;
                                             arpp.ToMac = arpp.ATargetMac;
@@ -210,7 +190,7 @@ namespace ARPPoisoningProtection
                                 }
                                 else
                                 {
-                                    data.arpCache[BytesToInt32(arpp.ASenderIP.GetAddressBytes())] = arpp.ASenderMac;
+                                    data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())] = arpp.ASenderMac;
                                     if (UpdatedArpCache != null)
                                         UpdatedArpCache();
                                     requestedIPs.Remove(ip);
@@ -221,9 +201,9 @@ namespace ARPPoisoningProtection
                         {
                             lock (padlock)
                             {
-                                if (data.arpCache.ContainsKey(BytesToInt32(arpp.ASenderIP.GetAddressBytes())))
+                                if (data.arpCache.ContainsKey(new IPAddr(arpp.ASenderIP.GetAddressBytes())))
                                 {
-                                    if (!Utility.ByteArrayEq(data.arpCache[BytesToInt32(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
+                                    if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
                                     {
                                         PacketMainReturnType pmra = 0;
                                         if (data.RectifyAttacks)
@@ -239,7 +219,7 @@ namespace ARPPoisoningProtection
                                         if (data.RectifyAttacks)
                                         {
                                             arpp.ATargetIP = arpp.ASenderIP;
-                                            arpp.ATargetMac = data.arpCache[BytesToInt32(arpp.ATargetIP.GetAddressBytes())];
+                                            arpp.ATargetMac = data.arpCache[new IPAddr(arpp.ATargetIP.GetAddressBytes())];
                                             arpp.ASenderMac = this.Adapter.GetAdapterInformation().InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
                                             arpp.FromMac = arpp.ASenderMac;
                                             arpp.ToMac = arpp.ATargetMac;
@@ -265,9 +245,9 @@ namespace ARPPoisoningProtection
                     {
                         lock (padlock)
                         {
-                            if (data.arpCache.ContainsKey(BytesToInt32(arpp.ASenderIP.GetAddressBytes())))
+                            if (data.arpCache.ContainsKey(new IPAddr(arpp.ASenderIP.GetAddressBytes())))
                             {
-                                if (!Utility.ByteArrayEq(data.arpCache[BytesToInt32(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
+                                if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
                                 {
                                     PacketMainReturnType pmr = PacketMainReturnType.Drop;
                                     if (data.LogAttacks)

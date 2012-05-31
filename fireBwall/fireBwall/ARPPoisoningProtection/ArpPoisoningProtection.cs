@@ -15,7 +15,7 @@ namespace ARPPoisoningProtection
     public partial class ArpPoisoningProtection : DynamicUserControl
     {
         ARPPoisoningProtectionModule saap;
-        SerializableDictionary<Int32, byte[]> cache = new SerializableDictionary<Int32, byte[]>();
+        SerializableDictionary<IPAddr, byte[]> cache = new SerializableDictionary<IPAddr, byte[]>();
 
         public ArpPoisoningProtection(ARPPoisoningProtectionModule saap)
             : base()
@@ -129,10 +129,9 @@ namespace ARPPoisoningProtection
             else
             {
                 listBox1.Items.Clear();
-                foreach (KeyValuePair<Int32, byte[]> i in cache)
-                {
-                    byte[] ip = ARPPoisoningProtectionModule.Int32ToBytes(i.Key);
-                    listBox1.Items.Add(BitConverter.ToString(i.Value).Replace("-", "") + " -> " + ip[0] + "." + ip[1] + "." + ip[2] + "." + ip[3]);
+                foreach (KeyValuePair<IPAddr, byte[]> i in cache)
+                {                    
+                    listBox1.Items.Add(BitConverter.ToString(i.Value).Replace("-", "") + " -> " + i.Key.ToString());
                 }
             }
         }
@@ -191,8 +190,8 @@ namespace ARPPoisoningProtection
                 if (listBox1.SelectedItem != null)
                 {
                     string i = (string)listBox1.SelectedItem;
-                    IPAddress ip = IPAddress.Parse(i.Split(' ')[2]);
-                    cache.Remove(ARPPoisoningProtectionModule.BytesToInt32(ip.GetAddressBytes()));
+                    IPAddr ip = IPAddr.Parse(i.Split(' ')[2]);
+                    cache.Remove(ip);
                     saap.UpdateCache(cache);
                     cache = saap.GetCache();
                     saap_UpdatedArpCache();

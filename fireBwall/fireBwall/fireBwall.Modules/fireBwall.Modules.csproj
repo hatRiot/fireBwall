@@ -84,6 +84,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Utils\BandwidthCounter.cs" />
+    <Compile Include="Utils\IPAddr.cs" />
     <Compile Include="Utils\PcapFileWriter.cs" />
     <Compile Include="Utils\Quad.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
