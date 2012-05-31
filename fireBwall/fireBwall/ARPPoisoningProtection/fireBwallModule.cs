@@ -6,7 +6,6 @@ using fireBwall.Packets;
 using fireBwall.Utils;
 using fireBwall.Configuration;
 using fireBwall.Logging;
-using fireBwall.Utils;
 using System.Net;
 using System.Net.NetworkInformation;
 
@@ -76,7 +75,7 @@ namespace ARPPoisoningProtection
         [Serializable]
         public class ArpData
         {
-            public SerializableDictionary<IPAddr, byte[]> arpCache = new SerializableDictionary<IPAddr, byte[]>();
+            public SerializableDictionary<IPAddr, MACAddr> arpCache = new SerializableDictionary<IPAddr, MACAddr>();
             public bool Save = true;
             public bool LogUnsolic = true;
             public bool LogAttacks = true;
@@ -90,19 +89,19 @@ namespace ARPPoisoningProtection
 
         public event System.Threading.ThreadStart UpdatedArpCache;
 
-        public SerializableDictionary<IPAddr, byte[]> GetCache()
+        public SerializableDictionary<IPAddr, MACAddr> GetCache()
         {
             lock (padlock)
             {
-                return new SerializableDictionary<IPAddr, byte[]>(data.arpCache);
+                return new SerializableDictionary<IPAddr, MACAddr>(data.arpCache);
             }
         }
 
-        public void UpdateCache(SerializableDictionary<IPAddr, byte[]> cache)
+        public void UpdateCache(SerializableDictionary<IPAddr, MACAddr> cache)
         {
             lock (padlock)
             {
-                data.arpCache = new SerializableDictionary<IPAddr, byte[]>(cache);
+                data.arpCache = new SerializableDictionary<IPAddr, MACAddr>(cache);
             }
         }
 
@@ -128,7 +127,7 @@ namespace ARPPoisoningProtection
                 ArpData d = data;
                 if (!d.Save)
                 {
-                    d.arpCache = new SerializableDictionary<IPAddr, byte[]>();
+                    d.arpCache = new SerializableDictionary<IPAddr, MACAddr>();
                 }
                 Save<ArpData>(d);
             }
@@ -157,7 +156,7 @@ namespace ARPPoisoningProtection
                             {
                                 if (data.arpCache.ContainsKey(new IPAddr(arpp.ASenderIP.GetAddressBytes())))
                                 {
-                                    if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
+                                    if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())].AddressBytes, arpp.ASenderMac))
                                     {
                                         PacketMainReturnType pmr = 0;
                                         if (data.RectifyAttacks)
@@ -173,7 +172,7 @@ namespace ARPPoisoningProtection
                                         if (data.RectifyAttacks)
                                         {
                                             arpp.ATargetIP = arpp.ASenderIP;
-                                            arpp.ATargetMac = data.arpCache[new IPAddr(arpp.ATargetIP.GetAddressBytes())];
+                                            arpp.ATargetMac = data.arpCache[new IPAddr(arpp.ATargetIP.GetAddressBytes())].AddressBytes;
                                             arpp.ASenderMac = this.Adapter.GetAdapterInformation().InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
                                             arpp.FromMac = arpp.ASenderMac;
                                             arpp.ToMac = arpp.ATargetMac;
@@ -190,7 +189,7 @@ namespace ARPPoisoningProtection
                                 }
                                 else
                                 {
-                                    data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())] = arpp.ASenderMac;
+                                    data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())] = new MACAddr(arpp.ASenderMac);
                                     if (UpdatedArpCache != null)
                                         UpdatedArpCache();
                                     requestedIPs.Remove(ip);
@@ -203,7 +202,7 @@ namespace ARPPoisoningProtection
                             {
                                 if (data.arpCache.ContainsKey(new IPAddr(arpp.ASenderIP.GetAddressBytes())))
                                 {
-                                    if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
+                                    if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())].AddressBytes, arpp.ASenderMac))
                                     {
                                         PacketMainReturnType pmra = 0;
                                         if (data.RectifyAttacks)
@@ -219,7 +218,7 @@ namespace ARPPoisoningProtection
                                         if (data.RectifyAttacks)
                                         {
                                             arpp.ATargetIP = arpp.ASenderIP;
-                                            arpp.ATargetMac = data.arpCache[new IPAddr(arpp.ATargetIP.GetAddressBytes())];
+                                            arpp.ATargetMac = data.arpCache[new IPAddr(arpp.ATargetIP.GetAddressBytes())].AddressBytes;
                                             arpp.ASenderMac = this.Adapter.GetAdapterInformation().InterfaceInformation.GetPhysicalAddress().GetAddressBytes();
                                             arpp.FromMac = arpp.ASenderMac;
                                             arpp.ToMac = arpp.ATargetMac;
@@ -247,7 +246,7 @@ namespace ARPPoisoningProtection
                         {
                             if (data.arpCache.ContainsKey(new IPAddr(arpp.ASenderIP.GetAddressBytes())))
                             {
-                                if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())], arpp.ASenderMac))
+                                if (!Utility.ByteArrayEq(data.arpCache[new IPAddr(arpp.ASenderIP.GetAddressBytes())].AddressBytes, arpp.ASenderMac))
                                 {
                                     PacketMainReturnType pmr = PacketMainReturnType.Drop;
                                     if (data.LogAttacks)

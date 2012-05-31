@@ -15,7 +15,7 @@ namespace ARPPoisoningProtection
     public partial class ArpPoisoningProtection : DynamicUserControl
     {
         ARPPoisoningProtectionModule saap;
-        SerializableDictionary<IPAddr, byte[]> cache = new SerializableDictionary<IPAddr, byte[]>();
+        SerializableDictionary<IPAddr, MACAddr> cache = new SerializableDictionary<IPAddr, MACAddr>();
 
         public ArpPoisoningProtection(ARPPoisoningProtectionModule saap)
             : base()
@@ -129,9 +129,9 @@ namespace ARPPoisoningProtection
             else
             {
                 listBox1.Items.Clear();
-                foreach (KeyValuePair<IPAddr, byte[]> i in cache)
+                foreach (KeyValuePair<IPAddr, MACAddr> i in cache)
                 {                    
-                    listBox1.Items.Add(BitConverter.ToString(i.Value).Replace("-", "") + " -> " + i.Key.ToString());
+                    listBox1.Items.Add(i.Value.ToString() + " -> " + i.Key.ToString());
                 }
             }
         }

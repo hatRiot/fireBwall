@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace fireBwall.Utils
 {
-    public class IPAddr : IEquatable<IPAddr>
+    [XmlRoot("IPAddr")]
+    public class IPAddr : IEquatable<IPAddr>, IXmlSerializable
     {
         #region Variables
 
@@ -88,8 +90,8 @@ namespace fireBwall.Utils
                     }
                     else
                     {
-                        bytes.Add(byte.Parse("" + temp[0] + temp[1]));
-                        bytes.Add(byte.Parse("" + temp[2] + temp[3]));
+                        bytes.Add(Convert.ToByte("" + temp[0] + temp[1], 16));
+                        bytes.Add(Convert.ToByte("" + temp[0] + temp[1], 16));
                         temp = temp.Substring(4);
                     }
                     if(temp.Length != 0)
@@ -150,6 +152,34 @@ namespace fireBwall.Utils
                 }
             }
             return ret;
+        }
+
+        #endregion
+
+        #region Serialization
+
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(System.Xml.XmlReader reader)
+        {           
+            reader.ReadStartElement("IPAddr");
+            reader.ReadStartElement("Addr");
+            XmlSerializer stringSerialization = new XmlSerializer(typeof(string));
+            IPAddr ip = IPAddr.Parse((string)stringSerialization.Deserialize(reader));
+            this.AddressBytes = ip.AddressBytes;
+            reader.ReadEndElement();
+            reader.ReadEndElement();
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement("Addr");
+            XmlSerializer stringSerialization = new XmlSerializer(typeof(string));
+            stringSerialization.Serialize(writer, ToString());
+            writer.WriteEndElement();
         }
 
         #endregion
