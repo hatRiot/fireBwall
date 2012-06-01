@@ -48,6 +48,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonLoadTheme = new System.Windows.Forms.Button();
+            this.buttonLoadModule = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -63,7 +65,7 @@
             this.displayTrayLogs.Size = new System.Drawing.Size(123, 17);
             this.displayTrayLogs.TabIndex = 0;
             this.displayTrayLogs.Text = "Display Icon Popups";
-            this.displayTrayLogs.UseVisualStyleBackColor = true;            
+            this.displayTrayLogs.UseVisualStyleBackColor = true;
             // 
             // languageBox
             // 
@@ -86,7 +88,6 @@
             this.languageBox.Name = "languageBox";
             this.languageBox.Size = new System.Drawing.Size(204, 21);
             this.languageBox.TabIndex = 1;
-            
             // 
             // languageLabel
             // 
@@ -105,9 +106,9 @@
             this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(3, 191);
+            this.groupBox1.Location = new System.Drawing.Point(3, 221);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(409, 103);
+            this.groupBox1.Size = new System.Drawing.Size(409, 106);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Update Options";
@@ -136,7 +137,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(204, 20);
             this.textBox1.TabIndex = 2;
-            
             // 
             // checkBox2
             // 
@@ -147,7 +147,6 @@
             this.checkBox2.TabIndex = 1;
             this.checkBox2.Text = "Intervaled Checks";
             this.checkBox2.UseVisualStyleBackColor = true;
-            
             // 
             // checkBox1
             // 
@@ -158,7 +157,6 @@
             this.checkBox1.TabIndex = 0;
             this.checkBox1.Text = "Check on Start Up";
             this.checkBox1.UseVisualStyleBackColor = true;
-            
             // 
             // checkBoxStartMinimized
             // 
@@ -171,7 +169,6 @@
             this.checkBoxStartMinimized.TabIndex = 9;
             this.checkBoxStartMinimized.Text = "Start Minimized";
             this.checkBoxStartMinimized.UseVisualStyleBackColor = true;
-            
             // 
             // label1
             // 
@@ -190,7 +187,6 @@
             this.themeBox.Name = "themeBox";
             this.themeBox.Size = new System.Drawing.Size(121, 21);
             this.themeBox.TabIndex = 11;
-            
             // 
             // button1
             // 
@@ -208,7 +204,6 @@
             this.maxLogsBox.Name = "maxLogsBox";
             this.maxLogsBox.Size = new System.Drawing.Size(204, 20);
             this.maxLogsBox.TabIndex = 13;
-            
             // 
             // label5
             // 
@@ -234,10 +229,11 @@
             this.maxPcapBox.Name = "maxPcapBox";
             this.maxPcapBox.Size = new System.Drawing.Size(204, 20);
             this.maxPcapBox.TabIndex = 10;
-            
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonLoadModule);
+            this.groupBox2.Controls.Add(this.buttonLoadTheme);
             this.groupBox2.Controls.Add(this.checkBox3);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.languageBox);
@@ -253,7 +249,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(409, 182);
+            this.groupBox2.Size = new System.Drawing.Size(409, 212);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "General Configuration";
@@ -267,7 +263,6 @@
             this.checkBox3.TabIndex = 14;
             this.checkBox3.Text = "checkBox3";
             this.checkBox3.UseVisualStyleBackColor = true;
-            
             // 
             // tableLayoutPanel1
             // 
@@ -280,11 +275,31 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 188F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 109F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 218F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 112F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(507, 338);
             this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // buttonLoadTheme
+            // 
+            this.buttonLoadTheme.Location = new System.Drawing.Point(199, 182);
+            this.buttonLoadTheme.Name = "buttonLoadTheme";
+            this.buttonLoadTheme.Size = new System.Drawing.Size(204, 23);
+            this.buttonLoadTheme.TabIndex = 15;
+            this.buttonLoadTheme.Text = "buttonLoadTheme";
+            this.buttonLoadTheme.UseVisualStyleBackColor = true;
+            this.buttonLoadTheme.Click += new System.EventHandler(this.buttonLoadTheme_Click);
+            // 
+            // buttonLoadModule
+            // 
+            this.buttonLoadModule.Location = new System.Drawing.Point(9, 182);
+            this.buttonLoadModule.Name = "buttonLoadModule";
+            this.buttonLoadModule.Size = new System.Drawing.Size(184, 23);
+            this.buttonLoadModule.TabIndex = 16;
+            this.buttonLoadModule.Text = "buttonLoadModule";
+            this.buttonLoadModule.UseVisualStyleBackColor = true;
+            this.buttonLoadModule.Click += new System.EventHandler(this.buttonLoadModule_Click);
             // 
             // OptionsDisplay
             // 
@@ -327,5 +342,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.Button buttonLoadModule;
+        private System.Windows.Forms.Button buttonLoadTheme;
     }
 }

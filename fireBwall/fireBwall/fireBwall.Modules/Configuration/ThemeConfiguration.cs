@@ -220,6 +220,50 @@ namespace fireBwall.Configuration
             }
         }
 
+        public void Load(string file, bool set = false)
+        {
+            if (File.Exists(file))
+            {
+                try
+                {
+                    LockCookie upgrade = new LockCookie();
+                    bool upgraded = false;
+                    if (locker.IsReaderLockHeld)
+                    {
+                        upgrade = locker.UpgradeToWriterLock(new TimeSpan(0, 1, 0));
+                        upgraded = true;
+                    }
+                    else
+                        locker.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                    try
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(ColorScheme));
+                        TextReader reader = new StreamReader(file);
+                        ColorScheme scheme = (ColorScheme)serializer.Deserialize(reader);
+                        reader.Close();
+                        schemes[scheme.Name] = scheme;
+                        if (set)
+                            ChangeTheme(scheme.Name, true);
+                    }
+                    catch (Exception e)
+                    {
+                        LogCenter.Instance.LogException(e);
+                    }
+                    finally
+                    {
+                        if (upgraded)
+                            locker.DowngradeFromWriterLock(ref upgrade);
+                        else
+                            locker.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException ex)
+                {
+                    LogCenter.Instance.LogException(ex);
+                }
+            }
+        }
+
         public void Load()
         {
             if (Directory.Exists(ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes"))

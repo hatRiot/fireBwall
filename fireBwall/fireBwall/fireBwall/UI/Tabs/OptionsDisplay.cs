@@ -28,6 +28,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.ENGLISH, "EditCurrent", "Edit");
             multistring.SetString(Language.ENGLISH, "Check", "Check on Start Up");
             multistring.SetString(Language.ENGLISH, "Inter", "Check on Interval");
+            multistring.SetString(Language.ENGLISH, "Load Module", "Load Module");
+            multistring.SetString(Language.ENGLISH, "Load Theme", "Load Theme");
 
             multistring.SetString(Language.DUTCH, "Display Icon Popups", "Display pictogram Popups");
             multistring.SetString(Language.DUTCH, "Language: ", "Taal: ");
@@ -43,6 +45,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.DUTCH, "EditCurrent", "Bewerken");
             multistring.SetString(Language.DUTCH, "Check", "Controleren op opstarten");
             multistring.SetString(Language.DUTCH, "Inter", "Controleren op Interval");
+            multistring.SetString(Language.DUTCH, "Load Module", "Load Module");
+            multistring.SetString(Language.DUTCH, "Load Theme", "Laden thema");
 
             multistring.SetString(Language.HEBREW, "Display Icon Popups", "הצג סמל הודעות מוקפצות");
             multistring.SetString(Language.HEBREW, "Language: ", "שפה:");
@@ -58,6 +62,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.HEBREW, "EditCurrent", "עריכה");
             multistring.SetString(Language.HEBREW, "Check", "בדיקת הפעלה");
             multistring.SetString(Language.HEBREW, "Inter", "בדוק מרווח");
+            multistring.SetString(Language.HEBREW, "Load Module", "טעינת המודול");
+            multistring.SetString(Language.HEBREW, "Load Theme", "ערכת נושא של עומס");
 
             multistring.SetString(Language.PORTUGUESE, "Display Icon Popups", "Mostrar Popups Icon");
             multistring.SetString(Language.PORTUGUESE, "Language: ", "Linguagem: ");
@@ -73,6 +79,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.PORTUGUESE, "EditCurrent", "Editar");
             multistring.SetString(Language.PORTUGUESE, "Check", "Verificar no arranque");
             multistring.SetString(Language.PORTUGUESE, "Inter", "Verifique no intervalo");
+            multistring.SetString(Language.PORTUGUESE, "Load Module", "Módulo de carga");
+            multistring.SetString(Language.PORTUGUESE, "Load Theme", "Tema de carga");
 
             multistring.SetString(Language.CHINESE, "Display Icon Popups", "显示图标弹出窗口");
             multistring.SetString(Language.CHINESE, "Language: ", "語言標籤: ");
@@ -88,6 +96,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.CHINESE, "EditCurrent", "编辑");
             multistring.SetString(Language.CHINESE, "Check", "启动时检查");
             multistring.SetString(Language.CHINESE, "Inter", "检查的时间间隔");
+            multistring.SetString(Language.CHINESE, "Load Module", "加载模块");
+            multistring.SetString(Language.CHINESE, "Load Theme", "负载主题");
 
             multistring.SetString(Language.GERMAN, "Display Icon Popups", "Anzeige Icon Popups");
             multistring.SetString(Language.GERMAN, "Language: ", "Sprachensiegel: ");
@@ -103,6 +113,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.GERMAN, "EditCurrent", "Bearbeiten");
             multistring.SetString(Language.GERMAN, "Check", "Überprüfen Sie auf der Start-Up");
             multistring.SetString(Language.GERMAN, "Inter", "Prüfen Sie auf Intervall");
+            multistring.SetString(Language.GERMAN, "Load Module", "Modul");
+            multistring.SetString(Language.GERMAN, "Load Theme", "Laden-Thema");
 
             multistring.SetString(Language.RUSSIAN, "Display Icon Popups", "Показать Иконка всплывающие окна");
             multistring.SetString(Language.RUSSIAN, "Language: ", "Язык этикетки: ");
@@ -118,6 +130,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.RUSSIAN, "EditCurrent", "Редактирование");
             multistring.SetString(Language.RUSSIAN, "Check", "Проверка на запуск");
             multistring.SetString(Language.RUSSIAN, "Inter", "Проверка на интервале");
+            multistring.SetString(Language.RUSSIAN, "Load Module", "Загрузить модуль");
+            multistring.SetString(Language.RUSSIAN, "Load Theme", "Загрузка тема");
 
             multistring.SetString(Language.SPANISH, "Display Icon Popups", "Mostrar ventanas emergentes Icono");
             multistring.SetString(Language.SPANISH, "Language: ", "Lenguaje de etiquetas: ");
@@ -133,6 +147,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.SPANISH, "EditCurrent", "Editar");
             multistring.SetString(Language.SPANISH, "Check", "Comprobar al inicio");
             multistring.SetString(Language.SPANISH, "Inter", "Comprobar el intervalo");
+            multistring.SetString(Language.SPANISH, "Load Module", "Módulo de carga");
+            multistring.SetString(Language.SPANISH, "Load Theme", "Tema de carga");
 
             multistring.SetString(Language.JAPANESE, "Display Icon Popups", "表示アイコンのポップアップ");
             multistring.SetString(Language.JAPANESE, "Language: ", "言語: ");
@@ -148,6 +164,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.JAPANESE, "EditCurrent", "編集");
             multistring.SetString(Language.JAPANESE, "Check", "起動を確認します。");
             multistring.SetString(Language.JAPANESE, "Inter", "間隔をチェックします。");
+            multistring.SetString(Language.JAPANESE, "Load Module", "負荷モジュール");
+            multistring.SetString(Language.JAPANESE, "Load Theme", "負荷のテーマ");
 
             multistring.SetString(Language.ITALIAN, "Display Icon Popups", "Visualizzazione icona pop-up");
             multistring.SetString(Language.ITALIAN, "Language: ", "Lingua: ");
@@ -163,6 +181,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.ITALIAN, "EditCurrent", "Modifica");
             multistring.SetString(Language.ITALIAN, "Check", "Check su Start Up");
             multistring.SetString(Language.ITALIAN, "Inter", "Controllare in un intervallo");
+            multistring.SetString(Language.ITALIAN, "Load Module", "Modulo di carico");
+            multistring.SetString(Language.ITALIAN, "Load Theme", "Tema di carico");
 
             multistring.SetString(Language.FRENCH, "Display Icon Popups", "Affichage icône Popups");
             multistring.SetString(Language.FRENCH, "Language: ", "Langue: ");
@@ -178,6 +198,8 @@ namespace fireBwall.UI.Tabs
             multistring.SetString(Language.FRENCH, "EditCurrent", "Edit");
             multistring.SetString(Language.FRENCH, "Check", "Vérifiez sur le démarrage");
             multistring.SetString(Language.FRENCH, "Inter", "Vérifiez sur l'intervalle");
+            multistring.SetString(Language.FRENCH, "Load Module", "Module de charge");
+            multistring.SetString(Language.FRENCH, "Load Theme", "Thème de la charge");
 
             InitializeComponent();
         }
@@ -250,6 +272,9 @@ namespace fireBwall.UI.Tabs
             maxLogsBox.Text = Convert.ToString(GeneralConfiguration.Instance.MaxLogs);
             maxPcapBox.Text = Convert.ToString(GeneralConfiguration.Instance.MaxPcapLogs);
 
+            LanguageChanged();
+            ThemeChanged();
+
             this.displayTrayLogs.CheckedChanged += new System.EventHandler(this.displayTrayLogs_CheckedChanged);
             this.languageBox.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -278,6 +303,8 @@ namespace fireBwall.UI.Tabs
             button1.Text = multistring.GetString("EditCurrent");
             checkBox1.Text = multistring.GetString("Check");
             checkBox2.Text = multistring.GetString("Inter");
+            buttonLoadModule.Text = multistring.GetString("Load Module");
+            buttonLoadTheme.Text = multistring.GetString("Load Theme");
         }
 
         public override void ThemeChanged()
@@ -422,6 +449,33 @@ namespace fireBwall.UI.Tabs
         {
             GeneralConfiguration.Instance.DeveloperMode = checkBox3.Checked;
             GeneralConfiguration.Instance.Save();
+        }
+
+        private void buttonLoadModule_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = false;
+            ofd.Filter = "Module DLL (*.dll)|*.dll";
+            ofd.InitialDirectory = ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "modules";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                foreach (fireBwall.Filters.NDIS.INDISFilter filter in ProcessingConfiguration.Instance.NDISFilterList.GetAllAdapters())
+                {
+                    filter.Modules.LoadModule(ofd.FileName);
+                    filter.Modules.UpdateModuleOrder();
+                }
+            }
+        }
+
+        private void buttonLoadTheme_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = false;
+            ofd.InitialDirectory = ConfigurationManagement.Instance.ConfigurationPath + Path.DirectorySeparatorChar + "themes";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                ThemeConfiguration.Instance.Load(ofd.FileName, true);
+            }
         }
     }
 }
