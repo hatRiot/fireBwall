@@ -42,7 +42,7 @@ namespace fireBwall.Modules
             folder = folder + Path.DirectorySeparatorChar + "Adapters";
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
-            folder = folder + Path.DirectorySeparatorChar + na.GetAdapterInformation().Name.Replace("/DEVICE/", "");
+            folder = folder + Path.DirectorySeparatorChar + na.GetAdapterInformation().Id;
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
             string file = folder + Path.DirectorySeparatorChar + "modules.cfg";
@@ -73,7 +73,7 @@ namespace fireBwall.Modules
             folder = folder + Path.DirectorySeparatorChar + "Adapters";
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
-            folder = folder + Path.DirectorySeparatorChar + na.GetAdapterInformation().Name.Replace("/DEVICE/", "");
+            folder = folder + Path.DirectorySeparatorChar + na.GetAdapterInformation().Id;
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
             string file = folder + Path.DirectorySeparatorChar + "modules.cfg";

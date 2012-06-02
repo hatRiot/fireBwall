@@ -31,9 +31,47 @@ namespace fireBwall
         {
             if (args.Length != 0)
             {
-                ConfigurationManagement.Instance.ConfigurationPath = args[0];
+                foreach (string arg in args)
+                {
+                    switch (arg)
+                    {
+                        case "-d":
+                        case "--dev-mode":
+                            break;
+                        case "-m":
+                        case "--start-minimized":
+                            break;
+                        case "-p":
+                        case "--dont-show-popups":
+                            break;
+                        default:
+                            ConfigurationManagement.Instance.ConfigurationPath = arg;
+                            break;
+                    }
+                }                
             }            
             ConfigurationManagement.Instance.LoadAllConfigurations();
+            if (args.Length != 0)
+            {
+                foreach (string arg in args)
+                {
+                    switch (arg)
+                    {
+                        case "-d":
+                        case "--dev-mode":
+                            GeneralConfiguration.Instance.DeveloperMode = true;
+                            break;
+                        case "-m":
+                        case "--start-minimized":
+                            GeneralConfiguration.Instance.StartMinimized = true;
+                            break;
+                        case "-p":
+                        case "--dont-show-popups":
+                            GeneralConfiguration.Instance.ShowPopups = false;
+                            break;
+                    }
+                }
+            } 
             foreach (INDISFilter filter in ProcessingConfiguration.Instance.NDISFilterList.GetAllAdapters())
             {
                 filter.StartProcessing();
