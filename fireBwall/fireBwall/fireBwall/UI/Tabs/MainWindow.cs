@@ -55,7 +55,7 @@ namespace fireBwall.UI.Tabs
                 // call the log purger
                 LogCenter.Instance.CleanLogs();
 
-                log = new Tabs.LogDisplay();
+                log = new LogDisplay();
                 log.Dock = DockStyle.Fill;
 
                 splitContainer1.Panel2.Controls.Add(log);

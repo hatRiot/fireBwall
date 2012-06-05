@@ -78,8 +78,6 @@ namespace fireBwall
             }
             Program.OnShutdown += ProcessingConfiguration.Instance.NDISFilterList.ShutdownAll;
             Program.OnShutdown += ConfigurationManagement.Instance.SaveAllConfigurations;
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
         }
     }

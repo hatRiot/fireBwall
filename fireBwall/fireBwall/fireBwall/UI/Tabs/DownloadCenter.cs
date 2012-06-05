@@ -48,6 +48,7 @@ namespace fireBwall.UI.Tabs
                     textBox1.Text += "\t- " + s + "\r\n";
                 }
                 ThemeChanged();
+                LanguageChanged();
             }
         }
 

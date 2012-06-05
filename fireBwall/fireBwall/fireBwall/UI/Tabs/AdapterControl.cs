@@ -61,6 +61,10 @@ namespace fireBwall.UI.Tabs
 
         public void UpdateAdapterList()
         {
+            if (this.Parent == null)
+            {
+                return;
+            }
             if (flowLayoutPanel1.InvokeRequired)
             {
                 ThreadStart ts = new ThreadStart(UpdateAdapterList);
@@ -86,6 +90,7 @@ namespace fireBwall.UI.Tabs
                     foreach (INDISFilter na in ProcessingConfiguration.Instance.NDISFilterList.GetNewAdapters())
                     {
                         AdapterDisplay ad = new AdapterDisplay(na.GetAdapterInformation());
+                        ThemeConfiguration.Instance.SetColorScheme(ad);
                         ad.Width = flowLayoutPanel1.Width - 5;
                         flowLayoutPanel1.Controls.Add(ad);
                     }

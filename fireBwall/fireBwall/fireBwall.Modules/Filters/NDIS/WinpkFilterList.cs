@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using fireBwall.Logging;
 using System.Text;
+using System.Threading;
 
 namespace fireBwall.Filters.NDIS
 {
@@ -11,8 +12,10 @@ namespace fireBwall.Filters.NDIS
 
         object padlock = new object();
         List<WinpkFilter> currentAdapters = new List<WinpkFilter>();
+        List<WinpkFilter> newAdapters = new List<WinpkFilter>();
         IntPtr hNdisapi = IntPtr.Zero;
         bool isNdisFilterDriverOpen = false;
+        Thread updateThread = null;
 
         #endregion
 
@@ -29,6 +32,7 @@ namespace fireBwall.Filters.NDIS
 
         public void CloseAllInterfaces()
         {
+            updateThread.Abort();
             foreach (WinpkFilter na in currentAdapters)
             {
                 na.StopProcessing();
@@ -57,6 +61,60 @@ namespace fireBwall.Filters.NDIS
                 return;
             }
             isNdisFilterDriverOpen = true;
+            if (updateThread == null)
+            {
+                updateThread = new Thread(NewAdaptersLoop);
+                updateThread.Name = "WinpkFilterList New Adapters Loop";
+                updateThread.Start();
+            }
+        }
+
+        void NewAdaptersLoop()
+        {
+            try
+            {
+                while (true)
+                {
+                    Thread.Sleep(1000);
+                    if (!isNdisFilterDriverOpen)
+                    {
+                        OpenDriver();
+                    }
+                    TCP_AdapterList adList = new TCP_AdapterList();
+                    Ndisapi.GetTcpipBoundAdaptersInfo(hNdisapi, ref adList);
+                    for (int x = 0; x < currentAdapters.Count; x++)
+                    {
+                        for (int y = 0; y < adList.m_nAdapterCount; y++)
+                        {
+                            if (adList.m_nAdapterHandle[y] == currentAdapters[x].adapterHandle)
+                            {
+                                currentAdapters[x].UpdateNetworkInterface(Encoding.ASCII.GetString(adList.m_szAdapterNameList, y * 256, 256));
+                            }
+                        }
+                    }
+                    for (int x = 0; x < adList.m_nAdapterCount; x++)
+                    {
+                        bool found = false;
+                        for (int y = 0; y < currentAdapters.Count; y++)
+                        {
+                            if (adList.m_nAdapterHandle[x] == currentAdapters[y].adapterHandle)
+                                found = true;
+                        }
+                        if (!found)
+                        {
+                            WinpkFilter newAdapter = new WinpkFilter(hNdisapi, adList.m_nAdapterHandle[x], Encoding.ASCII.GetString(adList.m_szAdapterNameList, x * 256, 256));
+                            if (newAdapter.GetAdapterInformation() != null && !string.IsNullOrEmpty(newAdapter.GetAdapterInformation().Name))
+                            {
+                                lock (newAdapters)
+                                {
+                                    newAdapters.Add(newAdapter);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (ThreadAbortException tae) { }
         }
 
         void UpdateCurrentAdapters()
@@ -131,43 +189,14 @@ namespace fireBwall.Filters.NDIS
 
         public INDISFilter[] GetNewAdapters()
         {
-            if (!isNdisFilterDriverOpen)
+            List<WinpkFilter> temp = new List<WinpkFilter>();
+            lock (newAdapters)
             {
-                OpenDriver();
+                temp = new List<WinpkFilter>(newAdapters);                
+                newAdapters.Clear();
             }
-            TCP_AdapterList adList = new TCP_AdapterList();
-            Ndisapi.GetTcpipBoundAdaptersInfo(hNdisapi, ref adList);
-            List<WinpkFilter> tempList = new List<WinpkFilter>();
-            for (int x = 0; x < currentAdapters.Count; x++)
-            {
-                for (int y = 0; y < adList.m_nAdapterCount; y++)
-                {
-                    if (adList.m_nAdapterHandle[y] == currentAdapters[x].adapterHandle)
-                    {
-                        currentAdapters[x].UpdateNetworkInterface(Encoding.ASCII.GetString(adList.m_szAdapterNameList, y * 256, 256));
-                    }
-                }
-            }
-            for (int x = 0; x < adList.m_nAdapterCount; x++)
-            {
-                bool found = false;
-                for (int y = 0; y < currentAdapters.Count; y++)
-                {
-                    if (adList.m_nAdapterHandle[x] == currentAdapters[y].adapterHandle)
-                        found = true;
-                }
-                if (!found)
-                {
-                    WinpkFilter newAdapter = new WinpkFilter(hNdisapi, adList.m_nAdapterHandle[x], Encoding.ASCII.GetString(adList.m_szAdapterNameList, x * 256, 256));
-                    if (newAdapter.GetAdapterInformation() != null && !string.IsNullOrEmpty(newAdapter.GetAdapterInformation().Name))
-                    {
-                        tempList.Add(newAdapter);
-                        currentAdapters.Add(newAdapter);
-                    }
-                }
-            }
-
-            return tempList.ToArray();
+            currentAdapters.AddRange(temp);
+            return temp.ToArray();
         }
 
         #endregion
