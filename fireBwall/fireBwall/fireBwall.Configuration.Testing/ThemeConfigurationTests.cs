@@ -19,17 +19,6 @@ namespace fireBwall.Configuration.Testing
             Assert.IsTrue(ThemeConfiguration.Instance.Schemes.Count > 0);
         }
 
-        [Test]
-        public void ClearThemes()
-        {
-            Program.Setup();
-            ThemeConfiguration.Instance.CreateDefaultThemes();
-            ThemeConfiguration.Instance.Save();
-            Assert.IsTrue(ThemeConfiguration.Instance.Schemes.Count > 0);
-            ThemeConfiguration.Instance.DeleteThemes();
-            Assert.IsTrue(ThemeConfiguration.Instance.Schemes.Count == 0);
-        }
-
         private bool changed = false;
 
         public void Changed()
@@ -43,8 +32,21 @@ namespace fireBwall.Configuration.Testing
             Program.Setup();
             ThemeConfiguration.Instance.CreateDefaultThemes();
             changed = false;
+            ThemeConfiguration.Instance.ChangeTheme("Mordor");
             ThemeConfiguration.Instance.ThemeChanged += Changed;
             ThemeConfiguration.Instance.ChangeTheme("Light");
+            Assert.IsTrue("Light".Equals(GeneralConfiguration.Instance.CurrentTheme));
+            Assert.IsTrue(changed);
+        }
+
+        [Test]
+        public void ForceChangeTheme()
+        {
+            Program.Setup();
+            ThemeConfiguration.Instance.CreateDefaultThemes();
+            changed = false;
+            ThemeConfiguration.Instance.ThemeChanged += Changed;
+            ThemeConfiguration.Instance.ChangeTheme("Light", true);
             Assert.IsTrue("Light".Equals(GeneralConfiguration.Instance.CurrentTheme));
             Assert.IsTrue(changed);
         }

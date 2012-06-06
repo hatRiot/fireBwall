@@ -32,6 +32,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\newTray.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,14 +50,70 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="UI\Tabs\AdapterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\AdapterControl.Designer.cs">
+      <DependentUpon>AdapterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\AdapterDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\AdapterDisplay.Designer.cs">
+      <DependentUpon>AdapterDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\ColorSchemeEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="UI\Tabs\ColorSchemeEditor.Designer.cs">
+      <DependentUpon>ColorSchemeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\DownloadCenter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\DownloadCenter.Designer.cs">
+      <DependentUpon>DownloadCenter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\Help.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\Help.Designer.cs">
+      <DependentUpon>Help.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\LogDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\LogDisplay.Designer.cs">
+      <DependentUpon>LogDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\MainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Tabs\ModuleConfiguration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\ModuleConfiguration.Designer.cs">
+      <DependentUpon>ModuleConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\OptionsDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\OptionsDisplay.Designer.cs">
+      <DependentUpon>OptionsDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tabs\TrayIcon.cs" />
+    <Compile Include="UI\Tabs\TrayPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Tabs\TrayPopup.Designer.cs">
+      <DependentUpon>TrayPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Updates\UpdateChecker.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -63,6 +123,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UI\Tabs\AdapterDisplay.resx">
+      <DependentUpon>AdapterDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Tabs\ColorSchemeEditor.resx">
+      <DependentUpon>ColorSchemeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Tabs\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Tabs\OptionsDisplay.resx">
+      <DependentUpon>OptionsDisplay.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -74,10 +146,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\fireBwall.Configuration\fireBwall.Configuration.csproj">
-      <Project>{74F27EED-D1D4-4104-9BA6-AF06656BB402}</Project>
-      <Name>fireBwall.Configuration</Name>
+    <ProjectReference Include="..\fireBwall.Modules\fireBwall.Modules.csproj">
+      <Project>{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}</Project>
+      <Name>fireBwall.Modules</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\newTray.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

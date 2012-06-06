@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,10 +30,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,10 +45,55 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ColorScheme.cs" />
+    <Compile Include="Configuration\ConfigurationManagement.cs" />
+    <Compile Include="Configuration\GeneralConfiguration.cs" />
+    <Compile Include="Configuration\MultilingualStringManager.cs" />
+    <Compile Include="Configuration\ProcessingConfiguration.cs" />
+    <Compile Include="Configuration\ThemeConfiguration.cs" />
+    <Compile Include="Filters\NDIS\AdapterInformation.cs" />
+    <Compile Include="Filters\NDIS\INDISFilter.cs" />
+    <Compile Include="Filters\NDIS\INDISFilterList.cs" />
+    <Compile Include="Filters\NDIS\ndisapi.cs" />
+    <Compile Include="Filters\NDIS\win32api.cs" />
+    <Compile Include="Filters\NDIS\WinpkFilter.cs" />
+    <Compile Include="Filters\NDIS\WinpkFilterList.cs" />
+    <Compile Include="NDISModule.cs" />
+    <Compile Include="Logging\DebugLogMessage.cs" />
+    <Compile Include="Logging\LogCenter.cs" />
+    <Compile Include="Logging\LogEvent.cs" />
+    <Compile Include="ModuleList.cs" />
+    <Compile Include="ModuleMeta.cs" />
     <Compile Include="PacketMainReturn.cs" />
+    <Compile Include="Packets\ARPPacket.cs" />
+    <Compile Include="Packets\DNSPacket.cs" />
+    <Compile Include="Packets\EETHPacket.cs" />
+    <Compile Include="Packets\EthPacket.cs" />
+    <Compile Include="Packets\ICMPPacket.cs" />
+    <Compile Include="Packets\ICMPv6Packet.cs" />
+    <Compile Include="Packets\IPPacket.cs" />
+    <Compile Include="Packets\Packet.cs" />
+    <Compile Include="Packets\PacketFactory.cs" />
+    <Compile Include="Packets\TCPPacket.cs" />
+    <Compile Include="Packets\UDPPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\DynamicForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DynamicUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Utils\BandwidthCounter.cs" />
+    <Compile Include="Utils\IPAddr.cs" />
+    <Compile Include="Utils\MACAddr.cs" />
+    <Compile Include="Utils\PcapFileWriter.cs" />
+    <Compile Include="Utils\Quad.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
     <Compile Include="Utils\SwapBufferQueue.cs" />
+    <Compile Include="Utils\Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\newTray.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

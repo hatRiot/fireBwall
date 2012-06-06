@@ -64,9 +64,9 @@
     <None Include="NUnit\nunit.core.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\fireBwall.Configuration\fireBwall.Configuration.csproj">
-      <Project>{74F27EED-D1D4-4104-9BA6-AF06656BB402}</Project>
-      <Name>fireBwall.Configuration</Name>
+    <ProjectReference Include="..\fireBwall.Modules\fireBwall.Modules.csproj">
+      <Project>{A20782B5-E43D-4ADE-AE68-92AAAE3E6F32}</Project>
+      <Name>fireBwall.Modules</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

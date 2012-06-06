@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using fireBwall.Logging;
+using System;
 
 namespace fireBwall.Utils
 {
@@ -8,12 +11,14 @@ namespace fireBwall.Utils
     /// <typeparam name="T"></typeparam>
     public class SwapBufferQueue<T>
     {
-        private Queue<T> bufferA = new Queue<T>();
-        private Queue<T> bufferB = new Queue<T>();
+        private volatile Queue<T> bufferA = new Queue<T>();
+        private volatile Queue<T> bufferB = new Queue<T>();
 
         //if false, A is being filled
         private bool swap = false;
         private readonly object dumpLock = new object();
+        private readonly object addLock = new object();
+        private volatile ReaderWriterLock swapLock = new ReaderWriterLock();
 
         /// <summary>
         /// Adds an object to the current queue for filling
@@ -21,16 +26,31 @@ namespace fireBwall.Utils
         /// <param name="t">The object to be added</param>
         public void Enqueue(T t)
         {
-            lock (this)
+            try
             {
-                if (swap)
+                swapLock.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                try
                 {
-                    bufferB.Enqueue(t);
+                    lock (addLock)
+                    {
+                        if (swap)
+                        {
+                            bufferB.Enqueue(t);
+                        }
+                        else
+                        {
+                            bufferA.Enqueue(t);
+                        }
+                    }
                 }
-                else
+                finally
                 {
-                    bufferA.Enqueue(t);
+                    swapLock.ReleaseReaderLock();
                 }
+            }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
             }
         }
 
@@ -40,25 +60,52 @@ namespace fireBwall.Utils
         /// <returns>A copy of the queue</returns>
         public Queue<T> DumpBuffer()
         {
-            lock (dumpLock)
+            Queue<T> ret = null;
+            try
             {
-                lock (this)
+                swapLock.AcquireWriterLock(new TimeSpan(0, 1, 0));
+                try
                 {
                     swap = !swap;
                 }
-                Queue<T> ret;
-                if (swap)
+                finally
                 {
-                    ret = new Queue<T>(bufferA);
-                    bufferA.Clear();
+                    swapLock.ReleaseWriterLock();
                 }
-                else
-                {
-                    ret = new Queue<T>(bufferB);
-                    bufferB.Clear();
-                }
-                return ret;
             }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
+            }
+            try
+            {
+                swapLock.AcquireReaderLock(new TimeSpan(0, 1, 0));
+                try
+                {
+                    lock (dumpLock)
+                    {
+                        if (swap)
+                        {
+                            ret = new Queue<T>(bufferA);
+                            bufferA.Clear();
+                        }
+                        else
+                        {
+                            ret = new Queue<T>(bufferB);
+                            bufferB.Clear();
+                        }
+                    }
+                }
+                finally
+                {
+                    swapLock.ReleaseReaderLock();
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                LogCenter.Instance.LogException(ex);
+            }
+            return ret;
         }
     }
 }
